@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { FaLinkedin, FaYoutube, FaGithub, FaInstagram, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaLinkedin, FaYoutube, FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import heroImage from './assets/santosh.png';
 import './App.css';
 
@@ -41,6 +41,7 @@ function YouTubeComments() {
   const [comments, setComments] = useState([]);
   const channelId = 'UCokhrwUBEeCxIgQJTmUv-JA'; // Replace this with your actual Channel ID
   const apiKey = 'AIzaSyDViYz1jaDASHXT0vLf-GgAjAYXekCoU-s';
+  const myChannelHandle = '@santastuffs'; // Your channel handle to filter out
 
   useEffect(() => {
     async function fetchComments() {
@@ -53,18 +54,38 @@ function YouTubeComments() {
         console.log("YouTube API Response:", data);
 
         if (data.items && data.items.length > 0) {
-          let items = data.items.map(item => ({
-            id: item.id,
-            videoId: item.snippet.videoId,
-            author: item.snippet.topLevelComment.snippet.authorDisplayName,
-            date: new Date(item.snippet.topLevelComment.snippet.publishedAt).toLocaleDateString(),
-            text: item.snippet.topLevelComment.snippet.textDisplay,
-            avatar: item.snippet.topLevelComment.snippet.authorProfileImageUrl
-          }));
-          
+          let items = data.items.map(item => {
+            const topLevelComment = {
+              id: item.id,
+              videoId: item.snippet.videoId,
+              author: item.snippet.topLevelComment.snippet.authorDisplayName,
+              date: new Date(item.snippet.topLevelComment.snippet.publishedAt).toLocaleDateString(),
+              text: item.snippet.topLevelComment.snippet.textDisplay,
+              avatar: item.snippet.topLevelComment.snippet.authorProfileImageUrl
+            };
+
+            // Include replies if available
+            const replies = [];
+            if (item.replies && item.replies.comments && item.replies.comments.length > 0) {
+              item.replies.comments.forEach(reply => {
+                replies.push({
+                  author: reply.snippet.authorDisplayName,
+                  date: new Date(reply.snippet.publishedAt).toLocaleDateString(),
+                  text: reply.snippet.textDisplay,
+                  avatar: reply.snippet.authorProfileImageUrl
+                });
+              });
+            }
+
+            return { ...topLevelComment, replies };
+          });
+
+          // Filter out own comments
+          items = items.filter(item => !item.author.includes(myChannelHandle.replace('@', '')));
+
           // Randomly shuffle the comments array
           items = items.sort(() => 0.5 - Math.random());
-          
+
           // Keep a subset of random comments (e.g. 10) to make the ticker manageable
           setComments(items.slice(0, 10));
         } else {
@@ -120,6 +141,22 @@ function YouTubeComments() {
               </div>
             </div>
             <p className="comment-text" dangerouslySetInnerHTML={{ __html: comment.text }} />
+            {comment.replies && comment.replies.length > 0 && (
+              <div className="comment-replies">
+                {comment.replies.slice(0, 2).map((reply, replyIndex) => (
+                  <div key={replyIndex} className="reply-card">
+                    <div className="reply-header">
+                      <img src={reply.avatar} alt="Avatar" className="reply-avatar" />
+                      <div className="reply-meta">
+                        <span className="reply-author">{reply.author}</span>
+                        <span className="reply-date">{reply.date}</span>
+                      </div>
+                    </div>
+                    <p className="reply-text" dangerouslySetInnerHTML={{ __html: reply.text }} />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -152,10 +189,45 @@ function App() {
             <h1 className="hero-title">Hi, I'm Santosh</h1>
             <p className="hero-subtitle">
               Software Engineer specializing in Full-Stack Development and AI.<br/>
-              Building production-ready applications with modern frameworks.
+              I love making videos about tech & AI Based in <a href="https://en.wikipedia.org/wiki/Tiruchirappalli" target="_blank" rel="noopener noreferrer">Trichy</a>, India.
             </p>
             <a href="mailto:Shantoshdurai06@gmail.com" className="hero-cta">Work with me</a>
           </FadeIn>
+        </section>
+
+        {/* Work Experience Section */}
+        <section className="timeline-vertical">
+          <h2 className="section-title">Work & Experience</h2>
+
+          <div className="timeline-wrapper">
+
+            <FadeIn className="timeline-content">
+              <div className="timeline-links">
+                <a href="https://www.youtube.com/@santastuffs" target="_blank" rel="noopener noreferrer" className="timeline-link demo-link">View Channel</a>
+              </div>
+              <div className="timeline-title-container">
+                <div className="timeline-title">Content Creator</div>
+                <div className="timeline-date">March 2025 - Present</div>
+              </div>
+              <p className="timeline-desc">
+                Creating and exploring tech on my own YouTube channel (@santastuffs). 151 subscribers and over 43.3K views. Producing content on AI, development, and tech insights.
+              </p>
+            </FadeIn>
+
+            <FadeIn className="timeline-content">
+              <div className="timeline-links">
+                <a href="https://www.youtube.com/@Behind_the_Feature" target="_blank" rel="noopener noreferrer" className="timeline-link demo-link">View Channel</a>
+              </div>
+              <div className="timeline-title-container">
+                <div className="timeline-title">Behind The Feature</div>
+                <div className="timeline-date">January - March 2025</div>
+              </div>
+              <p className="timeline-desc">
+                Freelance video editor & content strategist for tech YouTube channel (1.49K+ subscribers). Edited shorts, optimized titles, descriptions, and LinkedIn content for Deeksha, a Google tech industry insider.
+              </p>
+            </FadeIn>
+
+          </div>
         </section>
 
         {/* GitHub Projects Timeline */}
@@ -201,7 +273,7 @@ function App() {
                 <div className="timeline-date">January 2026</div>
               </div>
               <p className="timeline-desc">
-                AI-powered university class management app built with Flutter, Firebase & Gemini.
+                AI-powered university class management app built with Flutter, Firebase & Gemini, Won prizes in competions considered as my final year project.
               </p>
             </FadeIn>
 
@@ -523,9 +595,6 @@ function App() {
             </a>
             <a href="https://github.com/shantoshdurai" target="_blank" rel="noopener noreferrer" className="social-link" title="GitHub">
               <FaGithub size={20} />
-            </a>
-            <a href="#" className="social-link" title="Instagram">
-              <FaInstagram size={20} />
             </a>
           </div>
         </div>
