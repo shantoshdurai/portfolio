@@ -330,240 +330,116 @@ function App() {
 
         {/* Tools Section */}
         <section className="icon-list-wrapper">
-          <h2 className="section-title">Tools I use to build</h2>
+          <FadeIn style={{ width: '100%' }}>
+            <h2 className="section-title tools-title">Tools I use to build</h2>
+          </FadeIn>
           <div className="tools-grid">
-            
-            <FadeIn delay={100}>
+
+            <FadeIn delay={0} className="tool-row">
               <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" alt="JavaScript" className="tool-img"/>
-                </div>
-                <div className="tool-info">
-                  <span className="tool-name">JavaScript</span>
-                  <span className="tool-type">Programming Language</span>
-                </div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={12} /></div>
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" alt="JavaScript" className="tool-img"/></div>
+                <div className="tool-info"><span className="tool-name">JavaScript</span><span className="tool-type">Programming Language</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
-            </FadeIn>
-
-            <FadeIn delay={200}>
               <a href="https://react.dev/" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" alt="React" className="tool-img"/>
-                </div>
-                <div className="tool-info">
-                  <span className="tool-name">React</span>
-                  <span className="tool-type">JavaScript Library</span>
-                </div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={12} /></div>
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" alt="React" className="tool-img"/></div>
+                <div className="tool-info"><span className="tool-name">React</span><span className="tool-type">JavaScript Library</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
-            </FadeIn>
-
-            <FadeIn delay={300}>
               <a href="https://www.python.org/" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python" className="tool-img"/>
-                </div>
-                <div className="tool-info">
-                  <span className="tool-name">Python</span>
-                  <span className="tool-type">Programming Language</span>
-                </div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={12} /></div>
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python" className="tool-img"/></div>
+                <div className="tool-info"><span className="tool-name">Python</span><span className="tool-type">Programming Language</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
             </FadeIn>
 
-            <FadeIn delay={400}>
+            <FadeIn delay={80} className="tool-row">
               <a href="https://flutter.dev/" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/flutter/flutter-original.svg" alt="Flutter" className="tool-img"/>
-                </div>
-                <div className="tool-info">
-                  <span className="tool-name">Flutter</span>
-                  <span className="tool-type">Mobile UI Toolkit</span>
-                </div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={12} /></div>
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/flutter/flutter-original.svg" alt="Flutter" className="tool-img"/></div>
+                <div className="tool-info"><span className="tool-name">Flutter</span><span className="tool-type">Mobile UI Toolkit</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
-            </FadeIn>
-
-            <FadeIn delay={500}>
               <a href="https://unity.com/" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg" alt="Unity" className="tool-img" style={{filter: 'invert(1)'}}/>
-                </div>
-                <div className="tool-info">
-                  <span className="tool-name">Unity</span>
-                  <span className="tool-type">Game Engine</span>
-                </div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={12} /></div>
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg" alt="Unity" className="tool-img" style={{filter:'invert(1)'}}/></div>
+                <div className="tool-info"><span className="tool-name">Unity</span><span className="tool-type">Game Engine</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
-            </FadeIn>
-
-            <FadeIn delay={600}>
               <a href="https://vercel.com/" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vercel/vercel-original.svg" alt="Vercel" className="tool-img" style={{filter: 'invert(1)'}}/>
-                </div>
-                <div className="tool-info">
-                  <span className="tool-name">Vercel</span>
-                  <span className="tool-type">Deployment Platform</span>
-                </div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={12} /></div>
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vercel/vercel-original.svg" alt="Vercel" className="tool-img" style={{filter:'invert(1)'}}/></div>
+                <div className="tool-info"><span className="tool-name">Vercel</span><span className="tool-type">Deployment Platform</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
             </FadeIn>
 
-            <FadeIn delay={700}>
+            <FadeIn delay={160} className="tool-row">
               <a href="https://supabase.com/" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/supabase/supabase-original.svg" alt="Supabase" className="tool-img"/>
-                </div>
-                <div className="tool-info">
-                  <span className="tool-name">Supabase</span>
-                  <span className="tool-type">Backend as a Service</span>
-                </div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={12} /></div>
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/supabase/supabase-original.svg" alt="Supabase" className="tool-img"/></div>
+                <div className="tool-info"><span className="tool-name">Supabase</span><span className="tool-type">Backend as a Service</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
-            </FadeIn>
-
-            <FadeIn delay={800}>
               <a href="https://firebase.google.com/" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg" alt="Firebase" className="tool-img"/>
-                </div>
-                <div className="tool-info">
-                  <span className="tool-name">Firebase</span>
-                  <span className="tool-type">App Platform</span>
-                </div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={12} /></div>
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg" alt="Firebase" className="tool-img"/></div>
+                <div className="tool-info"><span className="tool-name">Firebase</span><span className="tool-type">App Platform</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
-            </FadeIn>
-
-            <FadeIn delay={900}>
               <a href="https://git-scm.com/" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" alt="Git" className="tool-img"/>
-                </div>
-                <div className="tool-info">
-                  <span className="tool-name">Git</span>
-                  <span className="tool-type">Version Control System</span>
-                </div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={12} /></div>
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" alt="Git" className="tool-img"/></div>
+                <div className="tool-info"><span className="tool-name">Git</span><span className="tool-type">Version Control System</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
             </FadeIn>
 
-            <FadeIn delay={1000}>
+            <FadeIn delay={240} className="tool-row">
               <a href="https://github.com/" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg" alt="GitHub" className="tool-img" style={{filter: 'invert(1)'}}/>
-                </div>
-                <div className="tool-info">
-                  <span className="tool-name">GitHub</span>
-                  <span className="tool-type">Code Hosting Platform</span>
-                </div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={12} /></div>
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg" alt="GitHub" className="tool-img" style={{filter:'invert(1)'}}/></div>
+                <div className="tool-info"><span className="tool-name">GitHub</span><span className="tool-type">Code Hosting Platform</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
-            </FadeIn>
-
-            <FadeIn delay={1100}>
               <a href="https://huggingface.co/" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon" style={{fontSize: '1.8rem'}}>
-                  🤗
-                </div>
-                <div className="tool-info">
-                  <span className="tool-name">Hugging Face</span>
-                  <span className="tool-type">AI Models & Spaces</span>
-                </div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={12} /></div>
+                <div className="tool-icon" style={{fontSize:'1.6rem'}}>🤗</div>
+                <div className="tool-info"><span className="tool-name">Hugging Face</span><span className="tool-type">AI Models & Spaces</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
-            </FadeIn>
-
-            <FadeIn delay={1200}>
               <a href="https://www.langchain.com/" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon" style={{fontSize: '1.8rem'}}>
-                  🦜
-                </div>
-                <div className="tool-info">
-                  <span className="tool-name">LangChain</span>
-                  <span className="tool-type">LLM Framework</span>
-                </div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={12} /></div>
+                <div className="tool-icon" style={{fontSize:'1.6rem'}}>🦜</div>
+                <div className="tool-info"><span className="tool-name">LangChain</span><span className="tool-type">LLM Framework</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
             </FadeIn>
 
-            <FadeIn delay={1300}>
+            <FadeIn delay={320} className="tool-row">
               <a href="https://developer.android.com/studio" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/androidstudio/androidstudio-original.svg" alt="Android Studio" className="tool-img"/>
-                </div>
-                <div className="tool-info">
-                  <span className="tool-name">Android Studio</span>
-                  <span className="tool-type">Android IDE</span>
-                </div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={12} /></div>
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/androidstudio/androidstudio-original.svg" alt="Android Studio" className="tool-img"/></div>
+                <div className="tool-info"><span className="tool-name">Android Studio</span><span className="tool-type">Android IDE</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
-            </FadeIn>
-
-            <FadeIn delay={1400}>
               <a href="https://www.tensorflow.org/" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tensorflow/tensorflow-original.svg" alt="TensorFlow" className="tool-img"/>
-                </div>
-                <div className="tool-info">
-                  <span className="tool-name">TensorFlow</span>
-                  <span className="tool-type">Machine Learning</span>
-                </div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={12} /></div>
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tensorflow/tensorflow-original.svg" alt="TensorFlow" className="tool-img"/></div>
+                <div className="tool-info"><span className="tool-name">TensorFlow</span><span className="tool-type">Machine Learning</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
-            </FadeIn>
-
-            <FadeIn delay={1500}>
               <a href="https://nodejs.org/" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" alt="Node.js" className="tool-img"/>
-                </div>
-                <div className="tool-info">
-                  <span className="tool-name">Node.js</span>
-                  <span className="tool-type">JS Runtime</span>
-                </div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={12} /></div>
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" alt="Node.js" className="tool-img"/></div>
+                <div className="tool-info"><span className="tool-name">Node.js</span><span className="tool-type">JS Runtime</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
             </FadeIn>
 
-            <FadeIn delay={1600}>
+            <FadeIn delay={400} className="tool-row">
               <a href="https://www.blender.org/" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg" alt="Blender" className="tool-img" style={{filter: 'invert(1)'}}/>
-                </div>
-                <div className="tool-info">
-                  <span className="tool-name">Blender</span>
-                  <span className="tool-type">3D Creation Suite</span>
-                </div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={12} /></div>
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg" alt="Blender" className="tool-img" style={{filter:'invert(1)'}}/></div>
+                <div className="tool-info"><span className="tool-name">Blender</span><span className="tool-type">3D Creation Suite</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
-            </FadeIn>
-
-            <FadeIn delay={1700}>
               <a href="https://claude.ai/" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon" style={{fontSize: '1.8rem'}}>
-                  ✨
-                </div>
-                <div className="tool-info">
-                  <span className="tool-name">Claude</span>
-                  <span className="tool-type">AI Assistant</span>
-                </div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={12} /></div>
+                <div className="tool-icon" style={{fontSize:'1.6rem'}}>✨</div>
+                <div className="tool-info"><span className="tool-name">Claude</span><span className="tool-type">AI Assistant</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
-            </FadeIn>
-
-            <FadeIn delay={1800}>
               <a href="https://www.adobe.com/creativecloud.html" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/photoshop/photoshop-plain.svg" alt="Adobe" className="tool-img"/>
-                </div>
-                <div className="tool-info">
-                  <span className="tool-name">Adobe CC</span>
-                  <span className="tool-type">Creative Suite</span>
-                </div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={12} /></div>
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/photoshop/photoshop-plain.svg" alt="Adobe" className="tool-img"/></div>
+                <div className="tool-info"><span className="tool-name">Adobe CC</span><span className="tool-type">Creative Suite</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
             </FadeIn>
 
@@ -580,6 +456,7 @@ function App() {
             <p className="footer-author">– Steve Jobs</p>
           </div>
           <div className="footer-contact">
+            <a href="https://shantoshdurai.github.io/" target="_blank" rel="noopener noreferrer">Projects</a>
             <a href="mailto:Shantoshdurai06@gmail.com">Contact</a>
           </div>
         </div>
