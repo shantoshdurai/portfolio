@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { FaLinkedin, FaYoutube, FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaLinkedin, FaYoutube, FaGithub, FaExternalLinkAlt, FaFolderOpen, FaFileAlt } from 'react-icons/fa';
 import heroImage from './assets/santosh.png';
 import './App.css';
 
@@ -172,7 +172,10 @@ function App() {
         <div className="nav-logo">
           <a href="/">SD</a>
         </div>
-        <a href="/CV-resume.pdf" target="_blank" rel="noopener noreferrer" className="nav-btn">GET MY CV</a>
+        <div className="nav-links">
+          <a href="https://shantoshdurai.github.io/" target="_blank" rel="noopener noreferrer" className="nav-btn">PROJECTS</a>
+          <a href="/CV-resume.pdf" target="_blank" rel="noopener noreferrer" className="nav-btn">GET MY CV</a>
+        </div>
       </header>
 
       {/* Main Content */}
@@ -472,6 +475,12 @@ function App() {
             </a>
             <a href="https://github.com/shantoshdurai" target="_blank" rel="noopener noreferrer" className="social-link" title="GitHub">
               <FaGithub size={20} />
+            </a>
+            <a href="https://shantoshdurai.github.io/" target="_blank" rel="noopener noreferrer" className="social-link mobile-only-link" title="Projects">
+              <FaFolderOpen size={20} />
+            </a>
+            <a href="/CV-resume.pdf" target="_blank" rel="noopener noreferrer" className="social-link mobile-only-link" title="Get My CV">
+              <FaFileAlt size={20} />
             </a>
           </div>
         </div>

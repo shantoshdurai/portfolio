@@ -30,6 +30,12 @@
   color: #fff;
 }
 
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+}
+
 .nav-btn {
   font-size: 0.8rem;
   font-weight: 500;
@@ -41,6 +47,11 @@
 
 .nav-btn:hover {
   color: #fff;
+}
+
+/* Hidden on mobile, shown on desktop */
+.mobile-only-link {
+  display: none;
 }
 
 /* ─── Scroll animation ────────────────────────────────────── */
@@ -636,6 +647,16 @@
 }
 
 @media (max-width: 768px) {
+  /* Hide nav links on mobile — they appear in footer instead */
+  .nav-links {
+    display: none;
+  }
+
+  /* Show Projects + CV icons in footer on mobile */
+  .mobile-only-link {
+    display: flex;
+  }
+
   .header {
     padding: 1.25rem 1.25rem 2.5rem 1.25rem;
   }
