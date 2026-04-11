@@ -7,7 +7,7 @@
   
   color-scheme: dark;
   color: #ffffff;
-  background-color: #050505;
+  background-color: #000000;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -25,9 +25,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #050505;
-  background-image: radial-gradient(circle at 10px 10px, rgba(255, 255, 255, 0.03) 2px, transparent 0);
-  background-size: 32px 32px;
+  background-color: #000000;
 }
 
 #root {

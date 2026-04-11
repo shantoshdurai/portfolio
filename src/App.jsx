@@ -83,6 +83,13 @@ function YouTubeComments() {
           // Filter out own comments
           items = items.filter(item => !item.author.includes(myChannelHandle.replace('@', '')));
 
+          // Filter out emoji-only comments (no real words)
+          const emojiOnlyRegex = /^[\p{Emoji}\s]+$/u;
+          items = items.filter(item => {
+            const plain = item.text.replace(/<[^>]*>/g, '').trim();
+            return plain.length > 0 && !emojiOnlyRegex.test(plain);
+          });
+
           // Randomly shuffle the comments array
           items = items.sort(() => 0.5 - Math.random());
 
@@ -113,6 +120,7 @@ function YouTubeComments() {
           </svg>
         </div>
       </div>
+      <div className="comments-ticker-wrapper">
       <div className="comments-ticker">
         {duplicatedComments.length > 0 && duplicatedComments.map((comment, index) => (
           <div 
@@ -160,6 +168,7 @@ function YouTubeComments() {
           </div>
         ))}
       </div>
+      </div>
     </section>
   );
 }
@@ -191,9 +200,9 @@ function App() {
             />
             <h1 className="hero-title">Hi, I'm Santosh</h1>
             <p className="hero-subtitle">
-              Software Engineer specializing in Full-Stack Development and AI.<br/>
-              I love making videos about tech & AI Based in <a href="https://en.wikipedia.org/wiki/Tiruchirappalli" target="_blank" rel="noopener noreferrer">Trichy</a>, India.
+              Software Engineer specializing in Full-Stack Development and AI. I love making <a href="https://shantoshdurai.github.io/" target="_blank" rel="noopener noreferrer">projects</a> and videos about tech & AI. Based in Trichy, India.
             </p>
+
             <a href="mailto:Shantoshdurai06@gmail.com" className="hero-cta">Work with me</a>
           </FadeIn>
         </section>
@@ -354,17 +363,37 @@ function App() {
                 <div className="tool-info"><span className="tool-name">Python</span><span className="tool-type">Programming Language</span></div>
                 <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
-            </FadeIn>
-
-            <FadeIn delay={80} className="tool-row">
               <a href="https://flutter.dev/" target="_blank" rel="noopener noreferrer" className="tool-card">
                 <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/flutter/flutter-original.svg" alt="Flutter" className="tool-img"/></div>
                 <div className="tool-info"><span className="tool-name">Flutter</span><span className="tool-type">Mobile UI Toolkit</span></div>
                 <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
-              <a href="https://unity.com/" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg" alt="Unity" className="tool-img" style={{filter:'invert(1)'}}/></div>
-                <div className="tool-info"><span className="tool-name">Unity</span><span className="tool-type">Game Engine</span></div>
+              <a href="https://nodejs.org/" target="_blank" rel="noopener noreferrer" className="tool-card">
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" alt="Node.js" className="tool-img"/></div>
+                <div className="tool-info"><span className="tool-name">Node.js</span><span className="tool-type">JS Runtime</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
+              </a>
+            </FadeIn>
+
+            <FadeIn delay={80} className="tool-row">
+              <a href="https://firebase.google.com/" target="_blank" rel="noopener noreferrer" className="tool-card">
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg" alt="Firebase" className="tool-img"/></div>
+                <div className="tool-info"><span className="tool-name">Firebase</span><span className="tool-type">App Platform</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
+              </a>
+              <a href="https://supabase.com/" target="_blank" rel="noopener noreferrer" className="tool-card">
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/supabase/supabase-original.svg" alt="Supabase" className="tool-img"/></div>
+                <div className="tool-info"><span className="tool-name">Supabase</span><span className="tool-type">Backend as a Service</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
+              </a>
+              <a href="https://git-scm.com/" target="_blank" rel="noopener noreferrer" className="tool-card">
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" alt="Git" className="tool-img"/></div>
+                <div className="tool-info"><span className="tool-name">Git</span><span className="tool-type">Version Control</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
+              </a>
+              <a href="https://github.com/" target="_blank" rel="noopener noreferrer" className="tool-card">
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg" alt="GitHub" className="tool-img" style={{filter:'invert(1)'}}/></div>
+                <div className="tool-info"><span className="tool-name">GitHub</span><span className="tool-type">Code Hosting</span></div>
                 <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
               <a href="https://vercel.com/" target="_blank" rel="noopener noreferrer" className="tool-card">
@@ -375,29 +404,6 @@ function App() {
             </FadeIn>
 
             <FadeIn delay={160} className="tool-row">
-              <a href="https://supabase.com/" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/supabase/supabase-original.svg" alt="Supabase" className="tool-img"/></div>
-                <div className="tool-info"><span className="tool-name">Supabase</span><span className="tool-type">Backend as a Service</span></div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
-              </a>
-              <a href="https://firebase.google.com/" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg" alt="Firebase" className="tool-img"/></div>
-                <div className="tool-info"><span className="tool-name">Firebase</span><span className="tool-type">App Platform</span></div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
-              </a>
-              <a href="https://git-scm.com/" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" alt="Git" className="tool-img"/></div>
-                <div className="tool-info"><span className="tool-name">Git</span><span className="tool-type">Version Control System</span></div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
-              </a>
-            </FadeIn>
-
-            <FadeIn delay={240} className="tool-row">
-              <a href="https://github.com/" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg" alt="GitHub" className="tool-img" style={{filter:'invert(1)'}}/></div>
-                <div className="tool-info"><span className="tool-name">GitHub</span><span className="tool-type">Code Hosting Platform</span></div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
-              </a>
               <a href="https://huggingface.co/" target="_blank" rel="noopener noreferrer" className="tool-card">
                 <div className="tool-icon" style={{fontSize:'1.6rem'}}>🤗</div>
                 <div className="tool-info"><span className="tool-name">Hugging Face</span><span className="tool-type">AI Models & Spaces</span></div>
@@ -408,27 +414,24 @@ function App() {
                 <div className="tool-info"><span className="tool-name">LangChain</span><span className="tool-type">LLM Framework</span></div>
                 <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
-            </FadeIn>
-
-            <FadeIn delay={320} className="tool-row">
-              <a href="https://developer.android.com/studio" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/androidstudio/androidstudio-original.svg" alt="Android Studio" className="tool-img"/></div>
-                <div className="tool-info"><span className="tool-name">Android Studio</span><span className="tool-type">Android IDE</span></div>
-                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
-              </a>
               <a href="https://www.tensorflow.org/" target="_blank" rel="noopener noreferrer" className="tool-card">
                 <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tensorflow/tensorflow-original.svg" alt="TensorFlow" className="tool-img"/></div>
                 <div className="tool-info"><span className="tool-name">TensorFlow</span><span className="tool-type">Machine Learning</span></div>
                 <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
-              <a href="https://nodejs.org/" target="_blank" rel="noopener noreferrer" className="tool-card">
-                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" alt="Node.js" className="tool-img"/></div>
-                <div className="tool-info"><span className="tool-name">Node.js</span><span className="tool-type">JS Runtime</span></div>
+              <a href="https://unity.com/" target="_blank" rel="noopener noreferrer" className="tool-card">
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg" alt="Unity" className="tool-img" style={{filter:'invert(1)'}}/></div>
+                <div className="tool-info"><span className="tool-name">Unity</span><span className="tool-type">Game Engine</span></div>
+                <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
+              </a>
+              <a href="https://developer.android.com/studio" target="_blank" rel="noopener noreferrer" className="tool-card">
+                <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/androidstudio/androidstudio-original.svg" alt="Android Studio" className="tool-img"/></div>
+                <div className="tool-info"><span className="tool-name">Android Studio</span><span className="tool-type">Android IDE</span></div>
                 <div className="tool-external-link"><FaExternalLinkAlt size={11} /></div>
               </a>
             </FadeIn>
 
-            <FadeIn delay={400} className="tool-row">
+            <FadeIn delay={240} className="tool-row">
               <a href="https://www.blender.org/" target="_blank" rel="noopener noreferrer" className="tool-card">
                 <div className="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg" alt="Blender" className="tool-img" style={{filter:'invert(1)'}}/></div>
                 <div className="tool-info"><span className="tool-name">Blender</span><span className="tool-type">3D Creation Suite</span></div>
