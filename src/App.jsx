@@ -29,60 +29,77 @@ function ThemeToggle({ theme, onToggle }) {
   );
 }
 
-// ─── Custom Cursor ─────────────────────────────────────────────
+// ─── Custom Cursor — Mac-style arrow ──────────────────────────
 function CustomCursor() {
-  const dotRef = useRef(null);
-  const ringRef = useRef(null);
-  const pos = useRef({ x: -200, y: -200 });
-  const ring = useRef({ x: -200, y: -200 });
-  const raf = useRef(null);
+  const arrowRef = useRef(null);
+  const glowRef  = useRef(null);
+  const mouse = useRef({ x: -200, y: -200 });
+  const glow  = useRef({ x: -200, y: -200 });
+  const raf   = useRef(null);
 
   useEffect(() => {
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
 
     const onMove = (e) => {
-      pos.current = { x: e.clientX, y: e.clientY };
-      if (dotRef.current) {
-        dotRef.current.style.left = e.clientX + 'px';
-        dotRef.current.style.top = e.clientY + 'px';
+      mouse.current = { x: e.clientX, y: e.clientY };
+      if (arrowRef.current) {
+        // offset -2px so stroke tip aligns with the actual hotspot
+        arrowRef.current.style.left = (e.clientX - 2) + 'px';
+        arrowRef.current.style.top  = (e.clientY - 2) + 'px';
       }
     };
 
     const onOver = (e) => {
-      if (e.target.closest('a, button, [role="button"], .tool-card, .comment-card')) {
-        ringRef.current?.classList.add('is-hovering');
+      if (e.target.closest('a, button, .tool-card, .comment-card')) {
+        arrowRef.current?.classList.add('is-hovering');
       }
     };
 
-    const onOut = () => ringRef.current?.classList.remove('is-hovering');
+    const onOut = () => arrowRef.current?.classList.remove('is-hovering');
 
     const tick = () => {
-      ring.current.x += (pos.current.x - ring.current.x) * 0.12;
-      ring.current.y += (pos.current.y - ring.current.y) * 0.12;
-      if (ringRef.current) {
-        ringRef.current.style.left = ring.current.x + 'px';
-        ringRef.current.style.top = ring.current.y + 'px';
+      glow.current.x += (mouse.current.x - glow.current.x) * 0.09;
+      glow.current.y += (mouse.current.y - glow.current.y) * 0.09;
+      if (glowRef.current) {
+        glowRef.current.style.left = glow.current.x + 'px';
+        glowRef.current.style.top  = glow.current.y + 'px';
       }
       raf.current = requestAnimationFrame(tick);
     };
 
     document.addEventListener('mousemove', onMove);
     document.addEventListener('mouseover', onOver);
-    document.addEventListener('mouseout', onOut);
+    document.addEventListener('mouseout',  onOut);
     raf.current = requestAnimationFrame(tick);
 
     return () => {
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseover', onOver);
-      document.removeEventListener('mouseout', onOut);
+      document.removeEventListener('mouseout',  onOut);
       cancelAnimationFrame(raf.current);
     };
   }, []);
 
   return (
     <>
-      <div ref={dotRef} className="cursor-dot" />
-      <div ref={ringRef} className="cursor-ring" />
+      {/* Soft orange glow that lazily follows the arrow */}
+      <div ref={glowRef} className="cursor-glow" />
+
+      {/* Mac-style arrow cursor */}
+      <svg
+        ref={arrowRef}
+        className="cursor-arrow"
+        width="22"
+        height="26"
+        viewBox="0 0 22 26"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          className="cursor-arrow-path"
+          d="M2 2 L2 20 L6.5 15.5 L10 23 L13 21.5 L9.5 14 L16.5 14 Z"
+        />
+      </svg>
     </>
   );
 }
