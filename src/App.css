@@ -21,11 +21,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  border: 1px solid var(--border);
-  background: transparent;
+  border: 1.5px solid var(--border-orange);
+  background: var(--orange-subtle);
   color: var(--text-2);
   padding: 0;
   flex-shrink: 0;
