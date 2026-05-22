@@ -313,7 +313,7 @@ function App() {
         </div>
         <div className="nav-right">
           <div className="nav-links">
-            <a href="https://shantoshdurai.github.io/React-portfolio/" target="_blank" rel="noopener noreferrer" className="nav-btn">Projects</a>
+            <a href="https://shantoshdurai.github.io/projects/" target="_blank" rel="noopener noreferrer" className="nav-btn">Projects</a>
             <a href="/CV-resume.pdf" target="_blank" rel="noopener noreferrer" className="nav-btn">Get my CV</a>
           </div>
           <ThemeToggle theme={theme} onToggle={toggleTheme} />
@@ -333,7 +333,7 @@ function App() {
           <div className="hero-eyebrow">// full-stack · ai · content creator</div>
           <h1 className="hero-title">Hi, I'm <em>Santosh</em></h1>
           <p className="hero-subtitle">
-            Software Engineer specializing in Full-Stack Development and AI. I love making <a href="https://shantoshdurai.github.io/React-portfolio/" target="_blank" rel="noopener noreferrer">projects</a> and videos about tech & AI. Based in Trichy, India.
+            Software Engineer specializing in Full-Stack Development and AI. I love making <a href="https://shantoshdurai.github.io/projects/" target="_blank" rel="noopener noreferrer">projects</a> and videos about tech & AI. Based in Trichy, India.
           </p>
           <a href="mailto:Shantoshdurai06@gmail.com" className="hero-cta">Work with me →</a>
         </section>
@@ -450,9 +450,9 @@ function App() {
 
             <FadeIn className="timeline-content">
               <div className="timeline-links">
-                <a href="https://github.com/shantoshdurai/React-portfolio" target="_blank" rel="noopener noreferrer" className="timeline-link github-link">GitHub Repo</a>
+                <a href="https://github.com/shantoshdurai/portfolio" target="_blank" rel="noopener noreferrer" className="timeline-link github-link">GitHub Repo</a>
                 <span className="timeline-separator">•</span>
-                <a href="https://shantoshdurai.github.io/React-portfolio/" target="_blank" rel="noopener noreferrer" className="timeline-link demo-link">Live Demo</a>
+                <a href="https://shantoshdurai.github.io/portfolio/" target="_blank" rel="noopener noreferrer" className="timeline-link demo-link">Live Demo</a>
               </div>
               <div className="timeline-title-container">
                 <div className="timeline-title">React Portfolio</div>
@@ -590,7 +590,7 @@ function App() {
             <p className="footer-author">— Steve Jobs</p>
           </div>
           <div className="footer-contact">
-            <a href="https://shantoshdurai.github.io/React-portfolio/" target="_blank" rel="noopener noreferrer">Projects</a>
+            <a href="https://shantoshdurai.github.io/projects/" target="_blank" rel="noopener noreferrer">Projects</a>
             <a href="mailto:Shantoshdurai06@gmail.com">Contact</a>
           </div>
         </div>
@@ -607,7 +607,7 @@ function App() {
             <a href="https://github.com/shantoshdurai" target="_blank" rel="noopener noreferrer" className="social-link" title="GitHub">
               <FaGithub size={19} />
             </a>
-            <a href="https://shantoshdurai.github.io/React-portfolio/" target="_blank" rel="noopener noreferrer" className="social-link mobile-only-link" title="Projects">
+            <a href="https://shantoshdurai.github.io/projects/" target="_blank" rel="noopener noreferrer" className="social-link mobile-only-link" title="Projects">
               <FaFolderOpen size={19} />
             </a>
             <a href="/CV-resume.pdf" target="_blank" rel="noopener noreferrer" className="social-link mobile-only-link" title="Get My CV">
