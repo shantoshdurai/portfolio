@@ -150,9 +150,9 @@
 
 .nav-btn {
   font-family: 'Space Mono', monospace;
-  font-size: 0.7rem;
-  font-weight: 400;
-  letter-spacing: 0.12em;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   color: var(--text-2);
   transition: color 0.2s ease;
   text-decoration: none;
@@ -256,9 +256,9 @@
 
 .hero-eyebrow {
   font-family: 'Space Mono', monospace;
-  font-size: 0.7rem;
+  font-size: 0.85rem;
   color: var(--orange);
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   margin-bottom: 1.25rem;
   opacity: 0;
   animation: fadeUp 0.85s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -286,11 +286,11 @@
 }
 
 .hero-subtitle {
-  font-size: 1.15rem;
+  font-size: 1.3rem;
   color: var(--text-2);
-  line-height: 1.7;
+  line-height: 1.6;
   margin-bottom: 2.75rem;
-  max-width: 560px;
+  max-width: 620px;
   font-weight: 400;
   opacity: 0;
   animation: fadeUp 0.95s 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -349,8 +349,8 @@
 .section-label {
   display: block;
   font-family: 'Space Mono', monospace;
-  font-size: 0.67rem;
-  letter-spacing: 0.16em;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
   color: var(--orange);
   margin-bottom: 0.85rem;
   text-transform: uppercase;
@@ -416,10 +416,10 @@
 
 .timeline-link {
   font-family: 'Space Mono', monospace;
-  font-size: 0.7rem;
-  font-weight: 400;
+  font-size: 0.85rem;
+  font-weight: 500;
   text-decoration: none;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.02em;
   transition: opacity 0.2s ease;
 }
 
@@ -462,7 +462,7 @@
 
 .timeline-title {
   font-family: 'Instrument Serif', Georgia, serif;
-  font-size: 1.2rem;
+  font-size: 1.45rem;
   font-weight: 400;
   color: var(--text);
   margin-bottom: 0.2rem;
@@ -471,16 +471,16 @@
 
 .timeline-date {
   font-family: 'Space Mono', monospace;
-  font-size: 0.67rem;
-  color: var(--text-3);
-  font-weight: 400;
-  letter-spacing: 0.05em;
+  font-size: 0.82rem;
+  color: var(--text-2);
+  font-weight: 500;
+  letter-spacing: 0.02em;
 }
 
 .timeline-desc {
-  font-size: 0.9rem;
+  font-size: 1.05rem;
   color: var(--text-2);
-  line-height: 1.7;
+  line-height: 1.6;
 }
 
 /* ═══════════════════════════════════════════
@@ -585,9 +585,9 @@
 
 .tool-type {
   font-family: 'Space Mono', monospace;
-  font-size: 0.6rem;
-  color: var(--text-3);
-  letter-spacing: 0.04em;
+  font-size: 0.73rem;
+  color: var(--text-2);
+  letter-spacing: 0.02em;
 }
 
 /* ═══════════════════════════════════════════
