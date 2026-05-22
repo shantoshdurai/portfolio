@@ -1,13 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
 
 :root {
-  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --bg:             #FEFCF8;
+  --bg-card:        #F4EFE6;
+  --text:           #1C1208;
+  --text-2:         #7A6250;
+  --text-3:         #B09A85;
+  --orange:         #C95C1A;
+  --orange-hover:   #E07030;
+  --orange-subtle:  rgba(201, 92, 26, 0.09);
+  --orange-glow:    rgba(201, 92, 26, 0.18);
+  --border:         rgba(28, 18, 8, 0.09);
+  --border-orange:  rgba(201, 92, 26, 0.28);
+
+  font-family: 'Space Grotesk', system-ui, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  
-  color-scheme: dark;
-  color: #ffffff;
-  background-color: #000000;
+  color-scheme: light;
+  color: var(--text);
+  background-color: var(--bg);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -25,7 +36,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #000000;
+  background-color: var(--bg);
 }
 
 #root {
@@ -35,4 +46,24 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* ─── Dark theme ─────────────────────────────────────────── */
+[data-theme="dark"] {
+  --bg:             #161210;
+  --bg-card:        #1F1B17;
+  --text:           #F0E8DC;
+  --text-2:         #A8927E;
+  --text-3:         #6B5A4A;
+  --orange:         #E07030;
+  --orange-hover:   #F08848;
+  --orange-subtle:  rgba(224, 112, 48, 0.12);
+  --orange-glow:    rgba(224, 112, 48, 0.22);
+  --border:         rgba(240, 232, 220, 0.08);
+  --border-orange:  rgba(224, 112, 48, 0.3);
+}
+
+/* Hide default cursor only on true pointer devices */
+@media (hover: hover) and (pointer: fine) {
+  * { cursor: none !important; }
 }
