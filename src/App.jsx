@@ -50,12 +50,14 @@ function CustomCursor() {
     };
 
     const onOver = (e) => {
-      if (e.target.closest('a, button, .tool-card, .comment-card')) {
+      if (e.target.closest('a, button, [role="button"], .tool-card, .comment-card, .timeline-link, .theme-toggle, .social-link')) {
         arrowRef.current?.classList.add('is-hovering');
+      } else {
+        arrowRef.current?.classList.remove('is-hovering');
       }
     };
 
-    const onOut = () => arrowRef.current?.classList.remove('is-hovering');
+    const onLeave = () => arrowRef.current?.classList.remove('is-hovering');
 
     const tick = () => {
       glow.current.x += (mouse.current.x - glow.current.x) * 0.09;
@@ -69,13 +71,13 @@ function CustomCursor() {
 
     document.addEventListener('mousemove', onMove);
     document.addEventListener('mouseover', onOver);
-    document.addEventListener('mouseout',  onOut);
+    document.addEventListener('mouseleave', onLeave);
     raf.current = requestAnimationFrame(tick);
 
     return () => {
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseover', onOver);
-      document.removeEventListener('mouseout',  onOut);
+      document.removeEventListener('mouseleave', onLeave);
       cancelAnimationFrame(raf.current);
     };
   }, []);
@@ -85,21 +87,40 @@ function CustomCursor() {
       {/* Soft orange glow that lazily follows the arrow */}
       <div ref={glowRef} className="cursor-glow" />
 
-      {/* Mac-style arrow cursor */}
-      <svg
-        ref={arrowRef}
-        className="cursor-arrow"
-        width="22"
-        height="26"
-        viewBox="0 0 22 26"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          className="cursor-arrow-path"
-          d="M2 2 L2 20 L6.5 15.5 L10 23 L13 21.5 L9.5 14 L16.5 14 Z"
-        />
-      </svg>
+      {/* Wrapping cursor container */}
+      <div ref={arrowRef} className="cursor-arrow">
+        {/* Mac-style arrow cursor */}
+        <svg
+          className="cursor-arrow-icon"
+          width="22"
+          height="26"
+          viewBox="0 0 22 26"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            className="cursor-arrow-path"
+            d="M2 2 L2 20 L6.5 15.5 L10 23 L13 21.5 L9.5 14 L16.5 14 Z"
+          />
+        </svg>
+
+        {/* Mac-style Pointer Hand cursor */}
+        <svg
+          className="cursor-hand-icon"
+          width="24"
+          height="28"
+          viewBox="0 0 32 32"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g transform="translate(-8, 0)">
+            <path
+              className="cursor-arrow-path"
+              d="M10 2C8.34 2 7 3.34 7 5V14.6L6.5 14.1C5.35 12.95 3.5 12.95 2.35 14.1C1.2 15.25 1.2 17.1 2.35 18.25L10.3 26.2C12.5 28.4 15.5 29.6 18.6 29.6H20.6C24.47 29.6 27.6 26.47 27.6 22.6V12.6C27.6 10.94 26.26 9.6 24.6 9.6C24.27 9.6 23.95 9.66 23.65 9.77C23.27 8.16 21.84 7 20.1 7C19.65 7 19.22 7.1 18.84 7.28C18.3 5.4 16.55 4 14.5 4C14.07 4 13.66 4.08 13.28 4.23C12.75 2.93 11.48 2 10 2Z"
+            />
+          </g>
+        </svg>
+      </div>
     </>
   );
 }
@@ -292,7 +313,7 @@ function App() {
         </div>
         <div className="nav-right">
           <div className="nav-links">
-            <a href="https://shantoshdurai.github.io/" target="_blank" rel="noopener noreferrer" className="nav-btn">Projects</a>
+            <a href="https://shantoshdurai.github.io/React-portfolio/" target="_blank" rel="noopener noreferrer" className="nav-btn">Projects</a>
             <a href="/CV-resume.pdf" target="_blank" rel="noopener noreferrer" className="nav-btn">Get my CV</a>
           </div>
           <ThemeToggle theme={theme} onToggle={toggleTheme} />
@@ -312,7 +333,7 @@ function App() {
           <div className="hero-eyebrow">// full-stack · ai · content creator</div>
           <h1 className="hero-title">Hi, I'm <em>Santosh</em></h1>
           <p className="hero-subtitle">
-            Software Engineer specializing in Full-Stack Development and AI. I love making <a href="https://shantoshdurai.github.io/" target="_blank" rel="noopener noreferrer">projects</a> and videos about tech & AI. Based in Trichy, India.
+            Software Engineer specializing in Full-Stack Development and AI. I love making <a href="https://shantoshdurai.github.io/React-portfolio/" target="_blank" rel="noopener noreferrer">projects</a> and videos about tech & AI. Based in Trichy, India.
           </p>
           <a href="mailto:Shantoshdurai06@gmail.com" className="hero-cta">Work with me →</a>
         </section>
@@ -429,9 +450,9 @@ function App() {
 
             <FadeIn className="timeline-content">
               <div className="timeline-links">
-                <a href="https://github.com/shantoshdurai/shantoshdurai.github.io" target="_blank" rel="noopener noreferrer" className="timeline-link github-link">GitHub Repo</a>
+                <a href="https://github.com/shantoshdurai/React-portfolio" target="_blank" rel="noopener noreferrer" className="timeline-link github-link">GitHub Repo</a>
                 <span className="timeline-separator">•</span>
-                <a href="https://shantoshdurai.github.io" target="_blank" rel="noopener noreferrer" className="timeline-link demo-link">Live Demo</a>
+                <a href="https://shantoshdurai.github.io/React-portfolio/" target="_blank" rel="noopener noreferrer" className="timeline-link demo-link">Live Demo</a>
               </div>
               <div className="timeline-title-container">
                 <div className="timeline-title">React Portfolio</div>
@@ -569,7 +590,7 @@ function App() {
             <p className="footer-author">— Steve Jobs</p>
           </div>
           <div className="footer-contact">
-            <a href="https://shantoshdurai.github.io/" target="_blank" rel="noopener noreferrer">Projects</a>
+            <a href="https://shantoshdurai.github.io/React-portfolio/" target="_blank" rel="noopener noreferrer">Projects</a>
             <a href="mailto:Shantoshdurai06@gmail.com">Contact</a>
           </div>
         </div>
@@ -586,7 +607,7 @@ function App() {
             <a href="https://github.com/shantoshdurai" target="_blank" rel="noopener noreferrer" className="social-link" title="GitHub">
               <FaGithub size={19} />
             </a>
-            <a href="https://shantoshdurai.github.io/" target="_blank" rel="noopener noreferrer" className="social-link mobile-only-link" title="Projects">
+            <a href="https://shantoshdurai.github.io/React-portfolio/" target="_blank" rel="noopener noreferrer" className="social-link mobile-only-link" title="Projects">
               <FaFolderOpen size={19} />
             </a>
             <a href="/CV-resume.pdf" target="_blank" rel="noopener noreferrer" className="social-link mobile-only-link" title="Get My CV">

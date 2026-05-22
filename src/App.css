@@ -64,6 +64,22 @@
   stroke-linecap: round;
 }
 
+.cursor-arrow .cursor-hand-icon {
+  display: none;
+}
+
+.cursor-arrow .cursor-arrow-icon {
+  display: block;
+}
+
+.cursor-arrow.is-hovering .cursor-hand-icon {
+  display: block;
+}
+
+.cursor-arrow.is-hovering .cursor-arrow-icon {
+  display: none;
+}
+
 /* Soft trailing glow */
 .cursor-glow {
   position: fixed;
