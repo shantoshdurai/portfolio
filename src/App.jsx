@@ -766,8 +766,11 @@ function App() {
             <a href="https://shantoshdurai.github.io/projects/" target="_blank" rel="noopener noreferrer" className="nav-btn">Projects</a>
             <a href={`${import.meta.env.BASE_URL}CV-resume.pdf`} target="_blank" rel="noopener noreferrer" className="nav-btn">Get my CV</a>
           </div>
-          <button className="cmdk-trigger" onClick={() => setPaletteOpen(true)} aria-label="Open command menu" title="Command menu (⌘K)">
-            <kbd>⌘</kbd><kbd>K</kbd>
+          <button className="cmdk-trigger" onClick={() => setPaletteOpen(true)} aria-label="Search and jump to anything" title="Command menu (⌘K)">
+            <span className="cmdk-trigger-keys"><kbd>⌘</kbd><kbd>K</kbd></span>
+            <svg className="cmdk-trigger-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" /><line x1="20" y1="20" x2="16.65" y2="16.65" />
+            </svg>
           </button>
           <ThemeToggle theme={theme} onToggle={toggleTheme} />
         </div>
@@ -809,7 +812,7 @@ function App() {
                 <div className="timeline-date">March 2025 — Present</div>
               </div>
               <p className="timeline-desc">
-                Creating and exploring tech on my own YouTube channel (@santastuffs). 151 subscribers and over 43.3K views. Producing content on AI, development, and tech insights.
+                Creating and exploring tech on my own YouTube channel (@santastuffs). 151 subscribers, 43.5K+ views and 1K+ likes. Producing content on AI, development, and tech insights.
               </p>
             </FadeIn>
 
