@@ -15,6 +15,23 @@
 }
 
 /* ═══════════════════════════════════════════
+   SCROLL PROGRESS BAR
+═══════════════════════════════════════════ */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--orange), var(--orange-hover));
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  z-index: 200;
+  will-change: transform;
+  box-shadow: 0 0 12px var(--orange-glow);
+}
+
+/* ═══════════════════════════════════════════
    THEME TOGGLE BUTTON
 ═══════════════════════════════════════════ */
 .theme-toggle {
@@ -39,63 +56,68 @@
 }
 
 /* ═══════════════════════════════════════════
-   CUSTOM CURSOR — Mac-style arrow
+   CUSTOM CURSOR — arrow pointer + hover ring
 ═══════════════════════════════════════════ */
 .cursor-arrow {
   position: fixed;
-  pointer-events: none;
+  top: 0;
+  left: 0;
   z-index: 99999;
-  will-change: left, top;
-  filter: drop-shadow(0 2px 6px rgba(28, 18, 8, 0.22));
-  transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1),
-              filter 0.15s ease;
-}
-
-.cursor-arrow.is-hovering {
-  transform: scale(0.88);
-  filter: drop-shadow(0 3px 10px rgba(201, 92, 26, 0.4));
-}
-
-.cursor-arrow-path {
-  fill: var(--text);
-  stroke: var(--bg);
-  stroke-width: 1.5;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-}
-
-.cursor-arrow .cursor-hand-icon {
-  display: none;
-}
-
-.cursor-arrow .cursor-arrow-icon {
-  display: block;
-}
-
-.cursor-arrow.is-hovering .cursor-hand-icon {
-  display: block;
-}
-
-.cursor-arrow.is-hovering .cursor-arrow-icon {
-  display: none;
-}
-
-/* Soft trailing glow */
-.cursor-glow {
-  position: fixed;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(201, 92, 26, 0.1) 0%, transparent 70%);
   pointer-events: none;
-  z-index: 99997;
-  transform: translate(-50%, -50%);
-  will-change: left, top;
+  will-change: transform;
+}
+
+/* Font Awesome mouse-pointer, brand-tinted. Inner element handles scale so
+   it never fights the per-frame position transform on .cursor-arrow. */
+.cursor-arrow-icon {
+  display: block;
+  font-size: 21px;
+  color: var(--orange);
+  transform: translate(-2px, -1px) scale(1);
+  transform-origin: top left;
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+              color 0.18s ease;
+}
+
+/* Over something clickable → arrow tucks in + brightens */
+.cursor-arrow.is-active .cursor-arrow-icon {
+  transform: translate(-2px, -1px) scale(0.72);
+  color: var(--orange-hover);
+}
+
+/* Press feedback */
+.cursor-arrow.is-down .cursor-arrow-icon {
+  transform: translate(-2px, -1px) scale(0.58);
+}
+
+/* Ring stays hidden until hovering a clickable target, then blooms around the pointer */
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--orange);
+  background: var(--orange-subtle);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 99998;
+  will-change: transform;
+  transition: width 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+              height 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.32s ease;
+}
+
+.cursor-ring.is-active {
+  width: 44px;
+  height: 44px;
+  opacity: 1;
 }
 
 @media (hover: none) {
   .cursor-arrow,
-  .cursor-glow { display: none; }
+  .cursor-ring { display: none; }
 }
 
 /* ═══════════════════════════════════════════
@@ -299,6 +321,21 @@
 .hero-title em {
   font-style: italic;
   color: var(--orange);
+  background: linear-gradient(
+    100deg,
+    var(--orange) 25%,
+    #F4A767 50%,
+    var(--orange) 75%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: nameShimmer 7s linear infinite;
+}
+
+@keyframes nameShimmer {
+  to { background-position: 200% center; }
 }
 
 .hero-subtitle {
@@ -346,12 +383,30 @@
   animation: fadeUp 0.95s 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
   position: relative;
   z-index: 1;
+  overflow: hidden;
+}
+
+.hero-cta::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -130%;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: skewX(-22deg);
+  transition: left 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
 }
 
 .hero-cta:hover {
   background: var(--orange-hover);
   transform: translateY(-2px);
   box-shadow: 0 14px 32px rgba(201, 92, 26, 0.32);
+}
+
+.hero-cta:hover::after {
+  left: 150%;
 }
 
 @keyframes fadeUp {
@@ -400,8 +455,24 @@
 
 .timeline-wrapper {
   position: relative;
-  border-left: 1.5px solid var(--border);
   margin-left: 0.5rem;
+}
+
+/* Soft gradient rail that fades in at the top and out at the bottom */
+.timeline-wrapper::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--border) 5%,
+    var(--border) 95%,
+    transparent 100%
+  );
 }
 
 .timeline-content {
@@ -413,14 +484,18 @@
 .timeline-content::before {
   content: '';
   position: absolute;
-  top: 0.35rem;
+  top: 0.4rem;
   left: -5px;
-  width: 9px;
-  height: 9px;
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
-  background-color: var(--orange);
+  background: var(--bg);
+  border: 2px solid var(--orange);
   z-index: 2;
-  box-shadow: 0 0 0 4px rgba(201, 92, 26, 0.12);
+  transition: background 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.45s ease,
+              box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .timeline-links {
@@ -497,6 +572,53 @@
   font-size: 1.05rem;
   color: var(--text-2);
   line-height: 1.6;
+}
+
+/* ─── Interactive hover for timeline entries ───────────────── */
+/* Hollow dot fills with a soft halo — eases in, no sudden pop */
+.timeline-content:hover::before {
+  background: var(--orange);
+  box-shadow: 0 0 0 5px var(--orange-subtle);
+  transform: scale(1.15);
+}
+
+.timeline-title {
+  transition: color 0.3s ease;
+}
+
+.timeline-content:hover .timeline-title {
+  color: var(--orange);
+}
+
+.timeline-title-container,
+.timeline-desc {
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.timeline-content:hover .timeline-title-container,
+.timeline-content:hover .timeline-desc {
+  transform: translateX(4px);
+}
+
+/* ─── "New" badge ──────────────────────────────────────────── */
+.new-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--orange);
+  background: var(--orange-subtle);
+  border: 1px solid var(--border-orange);
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  line-height: 1.5;
+  animation: badgePulse 2.4s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--orange-glow); }
+  50%      { box-shadow: 0 0 0 5px transparent; }
 }
 
 /* ═══════════════════════════════════════════
@@ -935,6 +1057,289 @@
 }
 
 /* ═══════════════════════════════════════════
+   COMMAND PALETTE TRIGGER (header)
+═══════════════════════════════════════════ */
+.cmdk-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  padding: 5px 9px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--orange-subtle);
+  color: var(--text-2);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.cmdk-trigger:hover { color: var(--orange); border-color: var(--border-orange); }
+.cmdk-trigger kbd {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ─── Project card "open details" hint ─────────────────────── */
+.card-open-hint {
+  margin-left: auto;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: var(--orange);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.timeline-content:hover .card-open-hint {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.repo-stars {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--orange);
+}
+
+.project-stars {
+  color: var(--orange);
+  font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════
+   PROJECT DETAIL MODAL
+═══════════════════════════════════════════ */
+.project-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(20, 14, 8, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: backdropIn 0.25s ease both;
+}
+
+.project-modal {
+  position: relative;
+  width: 100%;
+  max-width: 540px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border-orange);
+  border-radius: 22px;
+  padding: 2.5rem;
+  box-shadow: 0 24px 70px rgba(20, 14, 8, 0.28);
+  animation: modalIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.project-modal-close {
+  position: absolute;
+  top: 1.1rem;
+  right: 1.1rem;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-2);
+  transition: color 0.2s ease, border-color 0.2s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.project-modal-close:hover {
+  color: var(--orange);
+  border-color: var(--border-orange);
+  transform: rotate(90deg);
+}
+
+.project-modal-date {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: var(--orange);
+  margin-bottom: 0.5rem;
+}
+
+.project-modal-title {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 2.3rem;
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin-bottom: 1rem;
+  padding-right: 2.5rem;
+}
+
+.project-modal-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.project-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: var(--text-2);
+  background: var(--orange-subtle);
+  border: 1px solid var(--border);
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+}
+
+.project-modal-desc {
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: var(--text-2);
+  margin-bottom: 2rem;
+}
+
+.project-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.project-modal-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.4rem;
+  border-radius: 999px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid var(--border-orange);
+  color: var(--orange);
+  background: transparent;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.project-modal-btn:hover { transform: translateY(-2px); background: var(--orange-subtle); }
+.project-modal-btn.primary {
+  background: var(--orange);
+  color: var(--bg);
+  border-color: var(--orange);
+}
+.project-modal-btn.primary:hover { background: var(--orange-hover); }
+
+@keyframes backdropIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ═══════════════════════════════════════════
+   COMMAND PALETTE (⌘K)
+═══════════════════════════════════════════ */
+.cmdk-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 12vh 1.5rem 1.5rem;
+  background: rgba(20, 14, 8, 0.4);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: backdropIn 0.2s ease both;
+}
+
+.cmdk {
+  width: 100%;
+  max-width: 560px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-orange);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 24px 70px rgba(20, 14, 8, 0.3);
+  animation: modalIn 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.cmdk-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 1rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+}
+.cmdk-search-icon { color: var(--text-3); flex-shrink: 0; }
+.cmdk-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem;
+  color: var(--text);
+}
+.cmdk-input::placeholder { color: var(--text-3); }
+.cmdk-esc {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text-3);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 2px 6px;
+}
+
+.cmdk-list {
+  max-height: 50vh;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+.cmdk-empty {
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--text-3);
+  font-size: 0.9rem;
+}
+.cmdk-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  transition: background 0.12s ease;
+}
+.cmdk-item.is-sel { background: var(--orange-subtle); }
+.cmdk-item-label {
+  font-size: 0.92rem;
+  color: var(--text);
+  font-weight: 500;
+  transition: color 0.12s ease;
+}
+.cmdk-item.is-sel .cmdk-item-label { color: var(--orange); }
+.cmdk-item-group {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-modal-backdrop,
+  .project-modal,
+  .cmdk-backdrop,
+  .cmdk { animation: none; }
+}
+
+/* ═══════════════════════════════════════════
    RESPONSIVE
 ═══════════════════════════════════════════ */
 @media (min-width: 769px) {
@@ -1073,5 +1478,22 @@
   }
   .icon-list-wrapper {
     padding: 0 2rem;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   REDUCED MOTION
+═══════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .hero-title em {
+    animation: none;
+    background-position: 50% center;
+  }
+  .new-badge,
+  .hero-section::before {
+    animation: none;
+  }
+  .comments-ticker {
+    animation-duration: 120s;
   }
 }

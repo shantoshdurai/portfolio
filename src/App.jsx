@@ -1,8 +1,161 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
-import { FaLinkedin, FaYoutube, FaGithub, FaExternalLinkAlt, FaFolderOpen, FaFileAlt } from 'react-icons/fa';
+import { FaLinkedin, FaYoutube, FaGithub, FaExternalLinkAlt, FaFolderOpen, FaFileAlt, FaMousePointer } from 'react-icons/fa';
 import heroImage from './assets/santosh.png';
 import './App.css';
+
+// ─── Project data ─────────────────────────────────────────────
+const PROJECTS = [
+  {
+    id: 'phone-local-agent',
+    title: 'Phone Local Agent',
+    date: 'May 2026',
+    badge: 'New',
+    repo: 'https://github.com/shantoshdurai/Phone-Local-Agent',
+    tags: ['Dart', 'On-device AI', 'Automation'],
+    desc: 'An on-device AI agent that understands your phone and carries out actions on your behalf — built with Dart for fast, private, fully local automation.',
+  },
+  {
+    id: 'fluxtube',
+    title: 'FluxTube',
+    date: 'May 2026',
+    repo: 'https://github.com/shantoshdurai/fluxtube',
+    tags: ['Python', 'Flask', 'YouTube'],
+    desc: 'A YouTube video creation and downloading tool with a clean Flask web UI.',
+  },
+  {
+    id: 'manim-workflow',
+    title: 'Manim Animation Workflow',
+    date: 'April 2026',
+    repo: 'https://github.com/shantoshdurai/Manim-Animation-Workflow',
+    tags: ['Python', 'Manim'],
+    desc: 'My Manim-based animation pipeline for producing high-quality educational and explainer videos for YouTube.',
+  },
+  {
+    id: 'open-simulation',
+    title: 'Open Simulation',
+    date: 'April 2026',
+    repo: 'https://github.com/shantoshdurai/Open-Simulation',
+    tags: ['JavaScript', '3D', 'AI'],
+    desc: 'An AI-driven simulation set in an interactive 3D world.',
+  },
+  {
+    id: 'ai-inventory',
+    title: 'AI Inventory Demand Forecasting',
+    date: 'April 2026',
+    repo: 'https://github.com/shantoshdurai/ai-inventory-demand-forecasting',
+    tags: ['Python', 'XGBoost', 'Prophet', 'Streamlit'],
+    desc: 'ML-powered demand forecasting for MSMEs using XGBoost, Prophet & Streamlit.',
+  },
+  {
+    id: 'synapse',
+    title: 'Synapse',
+    date: 'April 2026',
+    repo: 'https://github.com/shantoshdurai/synapse',
+    tags: ['C++'],
+    desc: 'Your thoughts, connected like a brain.',
+  },
+  {
+    id: 'ghosttalker',
+    title: 'GhostTalker',
+    date: 'January 2026',
+    repo: 'https://github.com/shantoshdurai/GhostTalker',
+    demo: 'https://huggingface.co/spaces/Santoshp123/GhostTalker',
+    tags: ['F5-TTS', 'Voice Cloning', 'HuggingFace'],
+    desc: 'Zero-shot voice cloning powered by F5-TTS with live HuggingFace Spaces demo.',
+  },
+  {
+    id: 'classnow',
+    title: 'ClassNow App',
+    date: 'January 2026',
+    repo: 'https://github.com/shantoshdurai/ClassNow-app',
+    tags: ['Flutter', 'Firebase', 'Gemini'],
+    desc: 'AI-powered university class management app built with Flutter, Firebase & Gemini. Won prizes in competitions, considered as my final year project.',
+  },
+  {
+    id: 'flower-classifier',
+    title: 'Flower Species Classifier',
+    date: 'November 2025',
+    repo: 'https://github.com/shantoshdurai/flower-species-classifier',
+    demo: 'https://santoshp123-flower-species-classifiers.hf.space/',
+    tags: ['Python', 'MobileNetV2', 'Deep Learning'],
+    desc: 'Deep learning image classification model using MobileNetV2 transfer learning.',
+  },
+  {
+    id: 'university-chatbot',
+    title: 'University Chatbot Langchain',
+    date: 'September 2025',
+    repo: 'https://github.com/shantoshdurai/university-chatbot-langchain',
+    demo: 'https://university-chatbot-langchain.vercel.app/',
+    tags: ['LangChain', 'Ollama', 'RAG'],
+    desc: 'RAG-based university chatbot built with LangChain and Ollama (llama3.1:8b).',
+  },
+  {
+    id: 'react-portfolio',
+    title: 'React Portfolio',
+    date: 'February 2026',
+    repo: 'https://github.com/shantoshdurai/portfolio',
+    demo: 'https://shantoshdurai.github.io/portfolio/',
+    tags: ['React', 'Vite'],
+    desc: 'Personal portfolio site that auto-loads GitHub projects dynamically.',
+  },
+];
+
+const GITHUB_USER = 'shantoshdurai';
+
+// Repos to keep out of the auto-synced list (profile readme, duplicates, throwaways).
+const HIDE_REPOS = new Set([
+  'shantoshdurai',
+  'shantoshdurai.github.io',
+  'happy-birthday',
+  '3d-blender-archive',
+  'dusky',
+  'whisper',
+]);
+
+const prettifyRepoName = (name) =>
+  name.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+
+const monthYear = (iso) => {
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? '' : d.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+};
+
+const repoSlug = (url) => url.split('/').pop().toLowerCase();
+
+// Merge the curated list with live GitHub data: enrich curated entries with star
+// counts, then append any other owned, described, non-fork repo not already shown.
+function mergeProjects(repos) {
+  const byName = {};
+  repos.forEach((r) => { byName[r.name.toLowerCase()] = r; });
+
+  const curatedSlugs = new Set(PROJECTS.map((p) => repoSlug(p.repo)));
+  const enriched = PROJECTS.map((p) => {
+    const r = byName[repoSlug(p.repo)];
+    return r ? { ...p, stars: r.stargazers_count } : p;
+  });
+
+  const extras = repos
+    .filter((r) =>
+      !r.fork &&
+      !r.archived &&
+      r.description &&
+      !curatedSlugs.has(r.name.toLowerCase()) &&
+      !HIDE_REPOS.has(r.name.toLowerCase())
+    )
+    .map((r) => ({
+      id: r.name,
+      title: prettifyRepoName(r.name),
+      date: monthYear(r.pushed_at),
+      repo: r.html_url,
+      demo: r.homepage || undefined,
+      tags: r.language ? [r.language] : [],
+      desc: r.description,
+      stars: r.stargazers_count,
+    }));
+
+  return [...enriched, ...extras];
+}
 
 // ─── Theme Toggle ─────────────────────────────────────────────
 function ThemeToggle({ theme, onToggle }) {
@@ -29,104 +182,107 @@ function ThemeToggle({ theme, onToggle }) {
   );
 }
 
-// ─── Custom Cursor — Mac-style arrow ──────────────────────────
+// ─── Custom Cursor — arrow pointer + hover ring ───────────────
 function CustomCursor() {
   const arrowRef = useRef(null);
-  const glowRef  = useRef(null);
-  const mouse = useRef({ x: -200, y: -200 });
-  const glow  = useRef({ x: -200, y: -200 });
-  const raf   = useRef(null);
+  const ringRef  = useRef(null);
+  const mouse    = useRef({ x: -100, y: -100 });
+  const ring     = useRef({ x: -100, y: -100 });
+  const raf      = useRef(null);
 
   useEffect(() => {
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
 
+    const INTERACTIVE = 'a, button, [role="button"], input, textarea, select, label, .tool-card, .comment-card, .timeline-content, .timeline-link, .theme-toggle, .social-link, .nav-btn, .hero-cta';
+
+    // The arrow tracks the pointer 1:1 (no lag) via a GPU transform.
     const onMove = (e) => {
-      mouse.current = { x: e.clientX, y: e.clientY };
+      mouse.current.x = e.clientX;
+      mouse.current.y = e.clientY;
       if (arrowRef.current) {
-        // offset -2px so stroke tip aligns with the actual hotspot
-        arrowRef.current.style.left = (e.clientX - 2) + 'px';
-        arrowRef.current.style.top  = (e.clientY - 2) + 'px';
+        arrowRef.current.style.transform =
+          `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
       }
     };
 
     const onOver = (e) => {
-      if (e.target.closest('a, button, [role="button"], .tool-card, .comment-card, .timeline-link, .theme-toggle, .social-link')) {
-        arrowRef.current?.classList.add('is-hovering');
-      } else {
-        arrowRef.current?.classList.remove('is-hovering');
-      }
+      const active = !!e.target.closest(INTERACTIVE);
+      arrowRef.current?.classList.toggle('is-active', active);
+      ringRef.current?.classList.toggle('is-active', active);
     };
 
-    const onLeave = () => arrowRef.current?.classList.remove('is-hovering');
+    const onDown = () => arrowRef.current?.classList.add('is-down');
+    const onUp   = () => arrowRef.current?.classList.remove('is-down');
 
+    // The ring eases toward the pointer, blooming only over clickable targets.
     const tick = () => {
-      glow.current.x += (mouse.current.x - glow.current.x) * 0.09;
-      glow.current.y += (mouse.current.y - glow.current.y) * 0.09;
-      if (glowRef.current) {
-        glowRef.current.style.left = glow.current.x + 'px';
-        glowRef.current.style.top  = glow.current.y + 'px';
+      ring.current.x += (mouse.current.x - ring.current.x) * 0.18;
+      ring.current.y += (mouse.current.y - ring.current.y) * 0.18;
+      if (ringRef.current) {
+        ringRef.current.style.transform =
+          `translate3d(${ring.current.x}px, ${ring.current.y}px, 0) translate(-50%, -50%)`;
       }
       raf.current = requestAnimationFrame(tick);
     };
 
-    document.addEventListener('mousemove', onMove);
-    document.addEventListener('mouseover', onOver);
-    document.addEventListener('mouseleave', onLeave);
+    document.addEventListener('mousemove', onMove, { passive: true });
+    document.addEventListener('mouseover', onOver, { passive: true });
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('mouseup', onUp);
     raf.current = requestAnimationFrame(tick);
 
     return () => {
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseover', onOver);
-      document.removeEventListener('mouseleave', onLeave);
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('mouseup', onUp);
       cancelAnimationFrame(raf.current);
     };
   }, []);
 
   return (
     <>
-      {/* Soft orange glow that lazily follows the arrow */}
-      <div ref={glowRef} className="cursor-glow" />
-
-      {/* Wrapping cursor container */}
+      <div ref={ringRef} className="cursor-ring" />
       <div ref={arrowRef} className="cursor-arrow">
-        {/* Mac-style arrow cursor */}
-        <svg
-          className="cursor-arrow-icon"
-          width="22"
-          height="26"
-          viewBox="0 0 22 26"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            className="cursor-arrow-path"
-            d="M2 2 L2 20 L6.5 15.5 L10 23 L13 21.5 L9.5 14 L16.5 14 Z"
-          />
-        </svg>
-
-        {/* Mac-style Pointer Hand cursor */}
-        <svg
-          className="cursor-hand-icon"
-          width="24"
-          height="28"
-          viewBox="0 0 32 32"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <g transform="translate(-8, 0)">
-            <path
-              className="cursor-arrow-path"
-              d="M10 2C8.34 2 7 3.34 7 5V14.6L6.5 14.1C5.35 12.95 3.5 12.95 2.35 14.1C1.2 15.25 1.2 17.1 2.35 18.25L10.3 26.2C12.5 28.4 15.5 29.6 18.6 29.6H20.6C24.47 29.6 27.6 26.47 27.6 22.6V12.6C27.6 10.94 26.26 9.6 24.6 9.6C24.27 9.6 23.95 9.66 23.65 9.77C23.27 8.16 21.84 7 20.1 7C19.65 7 19.22 7.1 18.84 7.28C18.3 5.4 16.55 4 14.5 4C14.07 4 13.66 4.08 13.28 4.23C12.75 2.93 11.48 2 10 2Z"
-            />
-          </g>
-        </svg>
+        <FaMousePointer className="cursor-arrow-icon" />
       </div>
     </>
   );
 }
 
+// ─── Scroll Progress Bar ──────────────────────────────────────
+function ScrollProgress() {
+  const barRef = useRef(null);
+
+  useEffect(() => {
+    let raf = null;
+    const update = () => {
+      const el = document.documentElement;
+      const max = el.scrollHeight - el.clientHeight;
+      const progress = max > 0 ? el.scrollTop / max : 0;
+      if (barRef.current) {
+        barRef.current.style.transform = `scaleX(${Math.min(Math.max(progress, 0), 1)})`;
+      }
+      raf = null;
+    };
+    const onScroll = () => { if (raf == null) raf = requestAnimationFrame(update); };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    update();
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  return <div ref={barRef} className="scroll-progress" />;
+}
+
 // ─── Scroll Fade-In ───────────────────────────────────────────
-function FadeIn({ children, delay = 0, style, className = '' }) {
+function FadeIn({ children, delay = 0, style, className = '', ...rest }) {
   const [isVisible, setIsVisible] = useState(false);
   const domRef = useRef();
 
@@ -146,6 +302,7 @@ function FadeIn({ children, delay = 0, style, className = '' }) {
       ref={domRef}
       className={`fade-in-section ${isVisible ? 'is-visible' : ''} ${className}`}
       style={{ transitionDelay: `${delay}ms`, ...style }}
+      {...rest}
     >
       {children}
     </div>
@@ -212,7 +369,7 @@ function YouTubeComments() {
   const duplicatedComments = [...comments, ...comments];
 
   return (
-    <section className="youtube-section">
+    <section className="youtube-section" id="youtube">
       <div className="youtube-title-container">
         <h2 className="youtube-title">Comments from</h2>
         <div className="youtube-icon-red">
@@ -274,11 +431,152 @@ function YouTubeComments() {
   );
 }
 
+// ─── Project Detail Modal ─────────────────────────────────────
+function ProjectModal({ project, onClose }) {
+  return (
+    <div className="project-modal-backdrop" onClick={onClose}>
+      <div
+        className="project-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-label={project.title}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button className="project-modal-close" onClick={onClose} aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+
+        <div className="project-modal-date">
+          {project.date}
+          {project.stars > 0 && <span className="project-stars"> · ★ {project.stars}</span>}
+        </div>
+        <h3 className="project-modal-title">{project.title}</h3>
+
+        {project.tags && (
+          <div className="project-modal-tags">
+            {project.tags.map((t) => (
+              <span key={t} className="project-tag">{t}</span>
+            ))}
+          </div>
+        )}
+
+        <p className="project-modal-desc">{project.desc}</p>
+
+        <div className="project-modal-actions">
+          <a href={project.repo} target="_blank" rel="noopener noreferrer" className="project-modal-btn primary">
+            <FaGithub size={15} /> View Repository
+          </a>
+          {project.demo && (
+            <a href={project.demo} target="_blank" rel="noopener noreferrer" className="project-modal-btn">
+              <FaExternalLinkAlt size={12} /> Live Demo
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Command Palette (⌘K) ─────────────────────────────────────
+function CommandPalette({ open, onClose, commands }) {
+  const [query, setQuery] = useState('');
+  const [sel, setSel] = useState(0);
+  const inputRef = useRef(null);
+
+  const filtered = commands.filter((c) =>
+    c.label.toLowerCase().includes(query.toLowerCase().trim())
+  );
+
+  useEffect(() => {
+    if (open) {
+      setQuery('');
+      setSel(0);
+      const t = setTimeout(() => inputRef.current?.focus(), 20);
+      return () => clearTimeout(t);
+    }
+  }, [open]);
+
+  useEffect(() => { setSel(0); }, [query]);
+
+  useEffect(() => {
+    if (open) document.querySelector('.cmdk-item.is-sel')?.scrollIntoView({ block: 'nearest' });
+  }, [sel, open]);
+
+  if (!open) return null;
+
+  const run = (cmd) => { onClose(); cmd.run(); };
+
+  const onKeyDown = (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); setSel((s) => Math.min(s + 1, filtered.length - 1)); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setSel((s) => Math.max(s - 1, 0)); }
+    else if (e.key === 'Enter') { e.preventDefault(); if (filtered[sel]) run(filtered[sel]); }
+    else if (e.key === 'Escape') { e.preventDefault(); onClose(); }
+  };
+
+  return (
+    <div className="cmdk-backdrop" onClick={onClose}>
+      <div className="cmdk" role="dialog" aria-modal="true" aria-label="Command menu" onClick={(e) => e.stopPropagation()}>
+        <div className="cmdk-input-row">
+          <svg className="cmdk-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input
+            ref={inputRef}
+            className="cmdk-input"
+            placeholder="Search projects, sections, links…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={onKeyDown}
+          />
+          <kbd className="cmdk-esc">esc</kbd>
+        </div>
+        <div className="cmdk-list">
+          {filtered.length === 0 && <div className="cmdk-empty">No results</div>}
+          {filtered.map((c, i) => (
+            <button
+              key={c.id}
+              className={`cmdk-item ${i === sel ? 'is-sel' : ''}`}
+              onMouseEnter={() => setSel(i)}
+              onClick={() => run(c)}
+            >
+              <span className="cmdk-item-label">{c.label}</span>
+              <span className="cmdk-item-group">{c.group}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── App ──────────────────────────────────────────────────────
 function App() {
   const [theme, setTheme] = useState(
     () => document.documentElement.getAttribute('data-theme') || 'light'
   );
+  const [activeProject, setActiveProject] = useState(null);
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const [projects, setProjects] = useState(PROJECTS);
+
+  // Pull live repos from GitHub on load; fall back silently to the curated list.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`https://api.github.com/users/${GITHUB_USER}/repos?per_page=100&sort=pushed`);
+        if (!res.ok) return;
+        const repos = await res.json();
+        if (!cancelled && Array.isArray(repos)) setProjects(mergeProjects(repos));
+      } catch {
+        /* offline or rate-limited — keep the curated list */
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   const toggleTheme = (e) => {
     const next = theme === 'light' ? 'dark' : 'light';
@@ -294,16 +592,67 @@ function App() {
       return;
     }
 
-    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
-    document.documentElement.style.setProperty('--toggle-x', `${Math.round(left + width / 2)}px`);
-    document.documentElement.style.setProperty('--toggle-y', `${Math.round(top + height / 2)}px`);
+    // Origin the circular reveal on the toggle button, or the top-right when invoked without an event (e.g. command palette).
+    let x = window.innerWidth - 48;
+    let y = 48;
+    if (e && e.currentTarget) {
+      const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+      x = left + width / 2;
+      y = top + height / 2;
+    }
+    document.documentElement.style.setProperty('--toggle-x', `${Math.round(x)}px`);
+    document.documentElement.style.setProperty('--toggle-y', `${Math.round(y)}px`);
 
     document.startViewTransition(() => { flushSync(apply); });
   };
 
+  const openProject = (project) => setActiveProject(project);
+
+  // Experience cards open their primary link directly; project cards open the detail modal instead.
+  const openCardLink = (e) => {
+    if (e.target.closest('a, button, [role="button"]')) return;
+    const card = e.currentTarget;
+    const link =
+      card.querySelector('a.demo-link') ||
+      card.querySelector('a.github-link') ||
+      card.querySelector('a');
+    if (link) window.open(link.href, '_blank', 'noopener,noreferrer');
+  };
+
+  // ⌘K / Ctrl+K toggles the command palette; Escape closes the open project modal.
+  useEffect(() => {
+    const onKey = (e) => {
+      if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
+        e.preventDefault();
+        setPaletteOpen((o) => !o);
+      } else if (e.key === 'Escape') {
+        setActiveProject(null);
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, []);
+
+  const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+
+  const commands = [
+    { id: 'nav-exp',   group: 'Navigate', label: 'Go to Experience',        run: () => scrollTo('experience') },
+    { id: 'nav-proj',  group: 'Navigate', label: 'Go to Projects',          run: () => scrollTo('projects') },
+    { id: 'nav-yt',    group: 'Navigate', label: 'Go to YouTube Comments',  run: () => scrollTo('youtube') },
+    { id: 'nav-stack', group: 'Navigate', label: 'Go to Stack',             run: () => scrollTo('stack') },
+    { id: 'nav-top',   group: 'Navigate', label: 'Back to Top',             run: () => window.scrollTo({ top: 0, behavior: 'smooth' }) },
+    ...projects.map((p) => ({ id: `proj-${p.id}`, group: 'Projects', label: `Open ${p.title}`, run: () => setActiveProject(p) })),
+    { id: 'lnk-gh', group: 'Links', label: 'Open GitHub',          run: () => window.open('https://github.com/shantoshdurai', '_blank', 'noopener') },
+    { id: 'lnk-li', group: 'Links', label: 'Open LinkedIn',        run: () => window.open('https://www.linkedin.com/in/santoshp123/', '_blank', 'noopener') },
+    { id: 'lnk-yt', group: 'Links', label: 'Open YouTube Channel', run: () => window.open('https://www.youtube.com/@santastuffs', '_blank', 'noopener') },
+    { id: 'lnk-cv', group: 'Links', label: 'Download CV',          run: () => window.open('/CV-resume.pdf', '_blank', 'noopener') },
+    { id: 'theme',  group: 'Theme', label: 'Toggle light / dark theme', run: () => toggleTheme() },
+  ];
+
   return (
     <div className="app-container">
       <div className="grain-overlay" />
+      <ScrollProgress />
       <CustomCursor />
 
       {/* Header */}
@@ -316,6 +665,9 @@ function App() {
             <a href="https://shantoshdurai.github.io/projects/" target="_blank" rel="noopener noreferrer" className="nav-btn">Projects</a>
             <a href="/CV-resume.pdf" target="_blank" rel="noopener noreferrer" className="nav-btn">Get my CV</a>
           </div>
+          <button className="cmdk-trigger" onClick={() => setPaletteOpen(true)} aria-label="Open command menu" title="Command menu (⌘K)">
+            <kbd>⌘</kbd><kbd>K</kbd>
+          </button>
           <ThemeToggle theme={theme} onToggle={toggleTheme} />
         </div>
       </header>
@@ -339,7 +691,7 @@ function App() {
         </section>
 
         {/* Work Experience Section */}
-        <section className="timeline-vertical">
+        <section className="timeline-vertical" id="experience">
           <FadeIn>
             <span className="section-label">01 — Experience</span>
             <h2 className="section-title">Work & Experience</h2>
@@ -347,9 +699,9 @@ function App() {
 
           <div className="timeline-wrapper">
 
-            <FadeIn className="timeline-content">
+            <FadeIn className="timeline-content" onClick={openCardLink}>
               <div className="timeline-links">
-                <a href="https://www.youtube.com/@santastuffs" target="_blank" rel="noopener noreferrer" className="timeline-link demo-link">View Channel</a>
+                <a href="https://www.youtube.com/@santastuffs" target="_blank" rel="noopener noreferrer" className="timeline-link demo-link" onClick={(e) => e.stopPropagation()}>View Channel</a>
               </div>
               <div className="timeline-title-container">
                 <div className="timeline-title">Content Creator</div>
@@ -360,9 +712,9 @@ function App() {
               </p>
             </FadeIn>
 
-            <FadeIn className="timeline-content">
+            <FadeIn className="timeline-content" onClick={openCardLink}>
               <div className="timeline-links">
-                <a href="https://www.youtube.com/@Behind_the_Feature" target="_blank" rel="noopener noreferrer" className="timeline-link demo-link">View Channel</a>
+                <a href="https://www.youtube.com/@Behind_the_Feature" target="_blank" rel="noopener noreferrer" className="timeline-link demo-link" onClick={(e) => e.stopPropagation()}>View Channel</a>
               </div>
               <div className="timeline-title-container">
                 <div className="timeline-title">Behind The Feature</div>
@@ -377,90 +729,38 @@ function App() {
         </section>
 
         {/* GitHub Projects Timeline */}
-        <section className="timeline-vertical">
+        <section className="timeline-vertical" id="projects">
           <FadeIn>
             <span className="section-label">02 — Projects</span>
             <h2 className="section-title">Projects & Repositories</h2>
           </FadeIn>
 
           <div className="timeline-wrapper">
-
-            <FadeIn className="timeline-content">
-              <div className="timeline-links">
-                <a href="https://github.com/shantoshdurai/synapse" target="_blank" rel="noopener noreferrer" className="timeline-link github-link">GitHub Repo</a>
-              </div>
-              <div className="timeline-title-container">
-                <div className="timeline-title">Synapse</div>
-                <div className="timeline-date">April 2026</div>
-              </div>
-              <p className="timeline-desc">Your thoughts, connected like a brain.</p>
-            </FadeIn>
-
-            <FadeIn className="timeline-content">
-              <div className="timeline-links">
-                <a href="https://github.com/shantoshdurai/GhostTalker" target="_blank" rel="noopener noreferrer" className="timeline-link github-link">GitHub Repo</a>
-                <span className="timeline-separator">•</span>
-                <a href="https://huggingface.co/spaces/Santoshp123/GhostTalker" target="_blank" rel="noopener noreferrer" className="timeline-link demo-link">Live Demo</a>
-              </div>
-              <div className="timeline-title-container">
-                <div className="timeline-title">GhostTalker</div>
-                <div className="timeline-date">January 2026</div>
-              </div>
-              <p className="timeline-desc">Zero-shot voice cloning powered by F5-TTS with live HuggingFace Spaces demo.</p>
-            </FadeIn>
-
-            <FadeIn className="timeline-content">
-              <div className="timeline-links">
-                <a href="https://github.com/shantoshdurai/ClassNow-app" target="_blank" rel="noopener noreferrer" className="timeline-link github-link">GitHub Repo</a>
-              </div>
-              <div className="timeline-title-container">
-                <div className="timeline-title">ClassNow App</div>
-                <div className="timeline-date">January 2026</div>
-              </div>
-              <p className="timeline-desc">
-                AI-powered university class management app built with Flutter, Firebase & Gemini. Won prizes in competitions, considered as my final year project.
-              </p>
-            </FadeIn>
-
-            <FadeIn className="timeline-content">
-              <div className="timeline-links">
-                <a href="https://github.com/shantoshdurai/flower-species-classifier" target="_blank" rel="noopener noreferrer" className="timeline-link github-link">GitHub Repo</a>
-                <span className="timeline-separator">•</span>
-                <a href="https://santoshp123-flower-species-classifiers.hf.space/" target="_blank" rel="noopener noreferrer" className="timeline-link demo-link">Live Demo</a>
-              </div>
-              <div className="timeline-title-container">
-                <div className="timeline-title">Flower Species Classifier</div>
-                <div className="timeline-date">November 2025</div>
-              </div>
-              <p className="timeline-desc">Deep learning image classification model using MobileNetV2 transfer learning.</p>
-            </FadeIn>
-
-            <FadeIn className="timeline-content">
-              <div className="timeline-links">
-                <a href="https://github.com/shantoshdurai/university-chatbot-langchain" target="_blank" rel="noopener noreferrer" className="timeline-link github-link">GitHub Repo</a>
-                <span className="timeline-separator">•</span>
-                <a href="https://university-chatbot-langchain.vercel.app/" target="_blank" rel="noopener noreferrer" className="timeline-link demo-link">Live Demo</a>
-              </div>
-              <div className="timeline-title-container">
-                <div className="timeline-title">University Chatbot Langchain</div>
-                <div className="timeline-date">September 2025</div>
-              </div>
-              <p className="timeline-desc">RAG-based university chatbot built with LangChain and Ollama (llama3.1:8b).</p>
-            </FadeIn>
-
-            <FadeIn className="timeline-content">
-              <div className="timeline-links">
-                <a href="https://github.com/shantoshdurai/portfolio" target="_blank" rel="noopener noreferrer" className="timeline-link github-link">GitHub Repo</a>
-                <span className="timeline-separator">•</span>
-                <a href="https://shantoshdurai.github.io/portfolio/" target="_blank" rel="noopener noreferrer" className="timeline-link demo-link">Live Demo</a>
-              </div>
-              <div className="timeline-title-container">
-                <div className="timeline-title">React Portfolio</div>
-                <div className="timeline-date">February 2026</div>
-              </div>
-              <p className="timeline-desc">Personal portfolio site that auto-loads GitHub projects dynamically.</p>
-            </FadeIn>
-
+            {projects.map((p) => (
+              <FadeIn
+                key={p.id}
+                className="timeline-content project-card"
+                onClick={() => openProject(p)}
+              >
+                <div className="timeline-links">
+                  <a href={p.repo} target="_blank" rel="noopener noreferrer" className="timeline-link github-link" onClick={(e) => e.stopPropagation()}>GitHub Repo</a>
+                  {p.demo && (
+                    <>
+                      <span className="timeline-separator">•</span>
+                      <a href={p.demo} target="_blank" rel="noopener noreferrer" className="timeline-link demo-link" onClick={(e) => e.stopPropagation()}>Live Demo</a>
+                    </>
+                  )}
+                  {p.badge && <span className="new-badge">{p.badge}</span>}
+                  {p.stars > 0 && <span className="repo-stars">★ {p.stars}</span>}
+                  <span className="card-open-hint">Details →</span>
+                </div>
+                <div className="timeline-title-container">
+                  <div className="timeline-title">{p.title}</div>
+                  <div className="timeline-date">{p.date}</div>
+                </div>
+                <p className="timeline-desc">{p.desc}</p>
+              </FadeIn>
+            ))}
           </div>
         </section>
 
@@ -468,7 +768,7 @@ function App() {
         <YouTubeComments />
 
         {/* Tools Section */}
-        <section className="icon-list-wrapper">
+        <section className="icon-list-wrapper" id="stack">
           <FadeIn style={{ width: '100%', textAlign: 'center' }}>
             <span className="section-label" style={{ display: 'block', textAlign: 'center' }}>03 — Stack</span>
             <h2 className="section-title tools-title">Tools I use to build</h2>
@@ -616,6 +916,16 @@ function App() {
           </div>
         </div>
       </footer>
+
+      {activeProject && (
+        <ProjectModal project={activeProject} onClose={() => setActiveProject(null)} />
+      )}
+
+      <CommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+        commands={commands}
+      />
     </div>
   );
 }
