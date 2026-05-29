@@ -368,7 +368,7 @@
   align-items: center;
   gap: 0.45rem;
   padding: 0.9rem 2.3rem;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Satoshi', sans-serif;
   font-size: 0.88rem;
   font-weight: 600;
   color: var(--bg);
@@ -1107,6 +1107,36 @@
   font-weight: 700;
 }
 
+/* "View all my projects" link — sends the full catalogue to the projects site */
+.projects-all {
+  margin-top: 3.5rem;
+  text-align: center;
+}
+.projects-all-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.03em;
+  color: var(--text-2);
+  padding: 0.7rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+.projects-all-link:hover {
+  color: var(--orange);
+  border-color: var(--border-orange);
+  background: var(--orange-subtle);
+}
+.projects-all-arrow {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.projects-all-link:hover .projects-all-arrow {
+  transform: translateX(4px);
+}
+
 /* ═══════════════════════════════════════════
    PROJECT DETAIL MODAL
 ═══════════════════════════════════════════ */
@@ -1213,7 +1243,7 @@
   gap: 0.5rem;
   padding: 0.7rem 1.4rem;
   border-radius: 999px;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Satoshi', sans-serif;
   font-size: 0.9rem;
   font-weight: 600;
   border: 1px solid var(--border-orange);
@@ -1277,7 +1307,7 @@
   border: none;
   background: transparent;
   outline: none;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Satoshi', sans-serif;
   font-size: 1rem;
   color: var(--text);
 }
@@ -1337,6 +1367,47 @@
   .project-modal,
   .cmdk-backdrop,
   .cmdk { animation: none; }
+}
+
+/* ═══════════════════════════════════════════
+   DOODLE TRAIL — an organic vine that grows leaves on scroll
+═══════════════════════════════════════════ */
+.app-container { isolation: isolate; }
+
+.doodle-trail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+  color: var(--orange);
+}
+
+/* keep all real content above the doodle */
+.main-content,
+.footer { position: relative; z-index: 1; }
+
+.doodle-stem {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-opacity: 0.38;
+}
+
+.doodle-leaf {
+  fill: currentColor;
+  fill-opacity: 0.55;
+  /* per-leaf opacity (0→1) + scale animated inline as each one sprouts */
+}
+
+@media (max-width: 768px) {
+  .doodle-stem { stroke-opacity: 0.3; stroke-width: 1.5; }
+  .doodle-leaf { fill-opacity: 0.46; }
 }
 
 /* ═══════════════════════════════════════════

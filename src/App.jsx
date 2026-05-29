@@ -8,6 +8,7 @@ import './App.css';
 const PROJECTS = [
   {
     id: 'phone-local-agent',
+    featured: true,
     title: 'Phone Local Agent',
     date: 'May 2026',
     badge: 'New',
@@ -33,6 +34,7 @@ const PROJECTS = [
   },
   {
     id: 'open-simulation',
+    featured: true,
     title: 'Open Simulation',
     date: 'April 2026',
     repo: 'https://github.com/shantoshdurai/Open-Simulation',
@@ -57,6 +59,7 @@ const PROJECTS = [
   },
   {
     id: 'ghosttalker',
+    featured: true,
     title: 'GhostTalker',
     date: 'January 2026',
     repo: 'https://github.com/shantoshdurai/GhostTalker',
@@ -66,6 +69,7 @@ const PROJECTS = [
   },
   {
     id: 'classnow',
+    featured: true,
     title: 'ClassNow App',
     date: 'January 2026',
     repo: 'https://github.com/shantoshdurai/ClassNow-app',
@@ -83,6 +87,7 @@ const PROJECTS = [
   },
   {
     id: 'university-chatbot',
+    featured: true,
     title: 'University Chatbot Langchain',
     date: 'September 2025',
     repo: 'https://github.com/shantoshdurai/university-chatbot-langchain',
@@ -103,58 +108,21 @@ const PROJECTS = [
 
 const GITHUB_USER = 'shantoshdurai';
 
-// Repos to keep out of the auto-synced list (profile readme, duplicates, throwaways).
-const HIDE_REPOS = new Set([
-  'shantoshdurai',
-  'shantoshdurai.github.io',
-  'happy-birthday',
-  '3d-blender-archive',
-  'dusky',
-  'whisper',
-]);
-
-const prettifyRepoName = (name) =>
-  name.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-
-const monthYear = (iso) => {
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? '' : d.toLocaleString('en-US', { month: 'long', year: 'numeric' });
-};
-
 const repoSlug = (url) => url.split('/').pop().toLowerCase();
 
-// Merge the curated list with live GitHub data: enrich curated entries with star
-// counts, then append any other owned, described, non-fork repo not already shown.
+// Enrich the featured projects with live GitHub data (star counts). The full
+// catalogue lives on the separate projects site, so the homepage stays curated —
+// repos are never auto-appended here.
 function mergeProjects(repos) {
   const byName = {};
   repos.forEach((r) => { byName[r.name.toLowerCase()] = r; });
 
-  const curatedSlugs = new Set(PROJECTS.map((p) => repoSlug(p.repo)));
-  const enriched = PROJECTS.map((p) => {
-    const r = byName[repoSlug(p.repo)];
-    return r ? { ...p, stars: r.stargazers_count } : p;
-  });
-
-  const extras = repos
-    .filter((r) =>
-      !r.fork &&
-      !r.archived &&
-      r.description &&
-      !curatedSlugs.has(r.name.toLowerCase()) &&
-      !HIDE_REPOS.has(r.name.toLowerCase())
-    )
-    .map((r) => ({
-      id: r.name,
-      title: prettifyRepoName(r.name),
-      date: monthYear(r.pushed_at),
-      repo: r.html_url,
-      demo: r.homepage || undefined,
-      tags: r.language ? [r.language] : [],
-      desc: r.description,
-      stars: r.stargazers_count,
-    }));
-
-  return [...enriched, ...extras];
+  return PROJECTS
+    .filter((p) => p.featured)
+    .map((p) => {
+      const r = byName[repoSlug(p.repo)];
+      return r ? { ...p, stars: r.stargazers_count } : p;
+    });
 }
 
 // ─── Theme Toggle ─────────────────────────────────────────────
@@ -554,13 +522,145 @@ function CommandPalette({ open, onClose, commands }) {
 }
 
 // ─── App ──────────────────────────────────────────────────────
+// ─── Doodle Trail — an organic vine that grows leaves as you scroll ───
+// A single climbing stem meanders down the left margin; little leaves sprout
+// one-by-one as the drawing front reaches them. currentColor = --orange so it
+// reads in both themes. rAF-coalesced; honours prefers-reduced-motion.
+const LEAF_D = 'M 0 0 C 5 -6.5, 15.5 -6.5, 21 0 C 15.5 6.5, 5 6.5, 0 0 Z';
+
+function DoodleTrail() {
+  const stemRef   = useRef(null);
+  const leafGRef  = useRef(null);
+  const stemLen   = useRef(1);
+  const leavesRef = useRef([]);
+  const rafRef    = useRef(null);
+  const reduceRef = useRef(false);
+
+  useEffect(() => {
+    const stem  = stemRef.current;
+    const leafG = leafGRef.current;
+    if (!stem || !leafG) return;
+    const NS = 'http://www.w3.org/2000/svg';
+    reduceRef.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+
+    // deterministic PRNG so the vine keeps the same shape across rebuilds
+    const mulberry32 = (seed) => () => {
+      seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+
+    const draw = () => {
+      rafRef.current = null;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const p = max > 0 ? clamp01(window.scrollY / max) : 0;
+      const reveal = reduceRef.current ? 1 : Math.min(1, p * 1.06);
+      stem.style.strokeDashoffset = `${stemLen.current * (1 - reveal)}`;
+      const leaves = leavesRef.current;
+      for (let i = 0; i < leaves.length; i++) {
+        const lf = leaves[i];
+        const g = clamp01((reveal - lf.t) / 0.04);   // sprout as the front passes
+        const e = 1 - Math.pow(1 - g, 3);             // easeOutCubic
+        lf.el.style.opacity = e.toFixed(3);
+        lf.el.setAttribute('transform', `${lf.pre} scale(${(lf.size * e).toFixed(3)})`);
+      }
+    };
+
+    const build = () => {
+      const vw = window.innerWidth;
+      const h  = document.documentElement.scrollHeight;
+      const rnd = mulberry32(0x5A9701);
+      const mobile = vw <= 768;
+      // On phones hug the left edge with smaller leaves so the vine decorates
+      // the margin instead of sprawling across the text; roomier on desktop.
+      const baseX = mobile ? Math.max(18, vw * 0.06) : Math.max(58, vw * 0.12);
+      const sway  = mobile ? Math.min(30, vw * 0.06) : Math.min(150, vw * 0.12);
+      const leafScale = mobile ? 0.6 : 1;
+
+      // 1) walk down the page collecting meander points
+      const pts = [{ x: baseX, y: -50 }];
+      let y = -50, k = 0;
+      while (y < h + 120) {
+        y += 150 + rnd() * 170;
+        k += 1;
+        const dir = k % 2 === 0 ? 1 : -1;
+        pts.push({ x: baseX + dir * sway * (0.45 + rnd() * 0.75), y });
+      }
+
+      // 2) smooth the points into a flowing path (Catmull-Rom → cubic bézier)
+      let d = `M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
+      for (let i = 0; i < pts.length - 1; i++) {
+        const p0 = pts[i - 1] || pts[i];
+        const p1 = pts[i];
+        const p2 = pts[i + 1];
+        const p3 = pts[i + 2] || p2;
+        const c1x = p1.x + (p2.x - p0.x) / 6;
+        const c1y = p1.y + (p2.y - p0.y) / 6;
+        const c2x = p2.x - (p3.x - p1.x) / 6;
+        const c2y = p2.y - (p3.y - p1.y) / 6;
+        d += ` C ${c1x.toFixed(1)} ${c1y.toFixed(1)}, ${c2x.toFixed(1)} ${c2y.toFixed(1)}, ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`;
+      }
+      stem.setAttribute('d', d);
+      const total = stem.getTotalLength() || 1;
+      stemLen.current = total;
+      stem.style.strokeDasharray = `${total}`;
+
+      // 3) sprinkle leaves along the stem, alternating sides + rotated to tangent
+      while (leafG.firstChild) leafG.removeChild(leafG.firstChild);
+      const leaves = [];
+      let side = rnd() > 0.5 ? 1 : -1;
+      let s = 64;
+      while (s < total - 24) {
+        const pt = stem.getPointAtLength(s);
+        const ah = stem.getPointAtLength(Math.min(total, s + 2));
+        const tan = (Math.atan2(ah.y - pt.y, ah.x - pt.x) * 180) / Math.PI;
+        const ang = tan + side * (46 + rnd() * 28);
+        const size = (0.85 + rnd() * 0.85) * leafScale;
+        const el = document.createElementNS(NS, 'path');
+        el.setAttribute('d', LEAF_D);
+        el.setAttribute('class', 'doodle-leaf');
+        el.style.opacity = '0';
+        const pre = `translate(${pt.x.toFixed(1)} ${pt.y.toFixed(1)}) rotate(${ang.toFixed(1)})`;
+        el.setAttribute('transform', `${pre} scale(0)`);
+        leafG.appendChild(el);
+        leaves.push({ el, t: s / total, pre, size });
+        side *= -1;
+        s += 78 + rnd() * 74;
+      }
+      leavesRef.current = leaves;
+      draw();
+    };
+
+    const onScroll = () => { if (rafRef.current == null) rafRef.current = requestAnimationFrame(draw); };
+
+    build();
+    const ro = new ResizeObserver(build);
+    ro.observe(document.body);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('scroll', onScroll);
+      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
+  return (
+    <svg className="doodle-trail" aria-hidden="true">
+      <path ref={stemRef} className="doodle-stem" fill="none" />
+      <g ref={leafGRef} className="doodle-leaves" />
+    </svg>
+  );
+}
+
 function App() {
   const [theme, setTheme] = useState(
     () => document.documentElement.getAttribute('data-theme') || 'light'
   );
   const [activeProject, setActiveProject] = useState(null);
   const [paletteOpen, setPaletteOpen] = useState(false);
-  const [projects, setProjects] = useState(PROJECTS);
+  const [projects, setProjects] = useState(() => PROJECTS.filter((p) => p.featured));
 
   // Pull live repos from GitHub on load; fall back silently to the curated list.
   useEffect(() => {
@@ -645,7 +745,7 @@ function App() {
     { id: 'lnk-gh', group: 'Links', label: 'Open GitHub',          run: () => window.open('https://github.com/shantoshdurai', '_blank', 'noopener') },
     { id: 'lnk-li', group: 'Links', label: 'Open LinkedIn',        run: () => window.open('https://www.linkedin.com/in/santoshp123/', '_blank', 'noopener') },
     { id: 'lnk-yt', group: 'Links', label: 'Open YouTube Channel', run: () => window.open('https://www.youtube.com/@santastuffs', '_blank', 'noopener') },
-    { id: 'lnk-cv', group: 'Links', label: 'Download CV',          run: () => window.open('/CV-resume.pdf', '_blank', 'noopener') },
+    { id: 'lnk-cv', group: 'Links', label: 'Download CV',          run: () => window.open(`${import.meta.env.BASE_URL}CV-resume.pdf`, '_blank', 'noopener') },
     { id: 'theme',  group: 'Theme', label: 'Toggle light / dark theme', run: () => toggleTheme() },
   ];
 
@@ -653,6 +753,7 @@ function App() {
     <div className="app-container">
       <div className="grain-overlay" />
       <ScrollProgress />
+      <DoodleTrail />
       <CustomCursor />
 
       {/* Header */}
@@ -663,7 +764,7 @@ function App() {
         <div className="nav-right">
           <div className="nav-links">
             <a href="https://shantoshdurai.github.io/projects/" target="_blank" rel="noopener noreferrer" className="nav-btn">Projects</a>
-            <a href="/CV-resume.pdf" target="_blank" rel="noopener noreferrer" className="nav-btn">Get my CV</a>
+            <a href={`${import.meta.env.BASE_URL}CV-resume.pdf`} target="_blank" rel="noopener noreferrer" className="nav-btn">Get my CV</a>
           </div>
           <button className="cmdk-trigger" onClick={() => setPaletteOpen(true)} aria-label="Open command menu" title="Command menu (⌘K)">
             <kbd>⌘</kbd><kbd>K</kbd>
@@ -732,7 +833,7 @@ function App() {
         <section className="timeline-vertical" id="projects">
           <FadeIn>
             <span className="section-label">02 — Projects</span>
-            <h2 className="section-title">Projects & Repositories</h2>
+            <h2 className="section-title">A few things I've built</h2>
           </FadeIn>
 
           <div className="timeline-wrapper">
@@ -762,6 +863,18 @@ function App() {
               </FadeIn>
             ))}
           </div>
+
+          <FadeIn className="projects-all">
+            <a
+              href="https://shantoshdurai.github.io/projects/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="projects-all-link"
+            >
+              View all my projects
+              <span className="projects-all-arrow" aria-hidden="true">→</span>
+            </a>
+          </FadeIn>
         </section>
 
         {/* YouTube Comments Section */}
@@ -910,7 +1023,7 @@ function App() {
             <a href="https://shantoshdurai.github.io/projects/" target="_blank" rel="noopener noreferrer" className="social-link mobile-only-link" title="Projects">
               <FaFolderOpen size={19} />
             </a>
-            <a href="/CV-resume.pdf" target="_blank" rel="noopener noreferrer" className="social-link mobile-only-link" title="Get My CV">
+            <a href={`${import.meta.env.BASE_URL}CV-resume.pdf`} target="_blank" rel="noopener noreferrer" className="social-link mobile-only-link" title="Get My CV">
               <FaFileAlt size={19} />
             </a>
           </div>
