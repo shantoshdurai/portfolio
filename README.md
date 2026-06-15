@@ -2,6 +2,8 @@
 
 A modern, responsive portfolio website built with React + Vite showcasing my work, projects, and experience in full-stack development and AI.
 
+🔗 **Live site:** [shantoshdurai.github.io/portfolio](https://shantoshdurai.github.io/portfolio/)
+
 ## 📧 Contact
 
 - Email: Shantoshdurai06@gmail.com

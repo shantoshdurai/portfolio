@@ -7,11 +7,21 @@ import './App.css';
 // ─── Project data ─────────────────────────────────────────────
 const PROJECTS = [
   {
+    id: 'touchplay',
+    featured: true,
+    title: 'TouchPlay',
+    date: 'June 2026',
+    badge: 'New',
+    repo: 'https://github.com/shantoshdurai/TouchPlay',
+    demo: 'https://github.com/shantoshdurai/touchplay-releases/releases/latest',
+    tags: ['Flutter', 'Dart', 'Game Controller'],
+    desc: 'Turn your Android phone into a wireless Xbox-style controller for any PC game — low latency, up to 4 phones for local co-op, custom layouts, plus mouse & keyboard, screen mirroring and file transfer. Download the latest APK + PC server from Releases.',
+  },
+  {
     id: 'phone-local-agent',
     featured: true,
     title: 'Phone Local Agent',
     date: 'May 2026',
-    badge: 'New',
     repo: 'https://github.com/shantoshdurai/Phone-Local-Agent',
     tags: ['Dart', 'On-device AI', 'Automation'],
     desc: 'An on-device AI agent that understands your phone and carries out actions on your behalf — built with Dart for fast, private, fully local automation.',
@@ -48,14 +58,6 @@ const PROJECTS = [
     repo: 'https://github.com/shantoshdurai/ai-inventory-demand-forecasting',
     tags: ['Python', 'XGBoost', 'Prophet', 'Streamlit'],
     desc: 'ML-powered demand forecasting for MSMEs using XGBoost, Prophet & Streamlit.',
-  },
-  {
-    id: 'synapse',
-    title: 'Synapse',
-    date: 'April 2026',
-    repo: 'https://github.com/shantoshdurai/synapse',
-    tags: ['C++'],
-    desc: 'Your thoughts, connected like a brain.',
   },
   {
     id: 'ghosttalker',
