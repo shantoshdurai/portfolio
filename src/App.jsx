@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
-import { FaLinkedin, FaYoutube, FaGithub, FaExternalLinkAlt, FaFolderOpen, FaFileAlt, FaMousePointer } from 'react-icons/fa';
+import { FaLinkedin, FaYoutube, FaGithub, FaInstagram, FaExternalLinkAlt, FaFolderOpen, FaFileAlt, FaMousePointer } from 'react-icons/fa';
 import heroImage from './assets/santosh.png';
 import './App.css';
 
@@ -759,6 +759,7 @@ function App() {
     ...projects.map((p) => ({ id: `proj-${p.id}`, group: 'Projects', label: `Open ${p.title}`, run: () => setActiveProject(p) })),
     { id: 'lnk-gh', group: 'Links', label: 'Open GitHub',          run: () => window.open('https://github.com/shantoshdurai', '_blank', 'noopener') },
     { id: 'lnk-li', group: 'Links', label: 'Open LinkedIn',        run: () => window.open('https://www.linkedin.com/in/santoshp123/', '_blank', 'noopener') },
+    { id: 'lnk-ig', group: 'Links', label: 'Open Instagram',       run: () => window.open('https://www.instagram.com/santosh_durai/', '_blank', 'noopener') },
     { id: 'lnk-yt', group: 'Links', label: 'Open YouTube Channel', run: () => window.open('https://www.youtube.com/@santastuffs', '_blank', 'noopener') },
     { id: 'lnk-cv', group: 'Links', label: 'Download CV',          run: () => window.open(`${import.meta.env.BASE_URL}CV-resume.pdf`, '_blank', 'noopener') },
     { id: 'theme',  group: 'Theme', label: 'Toggle light / dark theme', run: () => toggleTheme() },
@@ -1050,6 +1051,9 @@ function App() {
             </a>
             <a href="https://github.com/shantoshdurai" target="_blank" rel="noopener noreferrer" className="social-link" title="GitHub">
               <FaGithub size={19} />
+            </a>
+            <a href="https://www.instagram.com/santosh_durai/" target="_blank" rel="noopener noreferrer me" className="social-link" title="Instagram">
+              <FaInstagram size={19} />
             </a>
             <a href="https://shantoshdurai.github.io/projects/" target="_blank" rel="noopener noreferrer" className="social-link mobile-only-link" title="Projects">
               <FaFolderOpen size={19} />
