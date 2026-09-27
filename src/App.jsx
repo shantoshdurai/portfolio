@@ -799,7 +799,7 @@ function App() {
         <section className="hero-section">
           <img
             src={heroImage}
-            alt="Santosh"
+            alt="Santosh Durai"
             className="hero-avatar"
           />
           <div className="hero-eyebrow">// full-stack · ai · content creator</div>
@@ -1041,7 +1041,7 @@ function App() {
         </div>
 
         <div className="footer-bottom">
-          <p className="footer-copy">© 2026 Santosh.</p>
+          <p className="footer-copy">© 2026 Santosh Durai.</p>
           <div className="footer-socials">
             <a href="https://www.linkedin.com/in/santoshp123/" target="_blank" rel="noopener noreferrer" className="social-link" title="LinkedIn">
               <FaLinkedin size={19} />
