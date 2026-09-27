@@ -7,15 +7,28 @@ import './App.css';
 // ─── Project data ─────────────────────────────────────────────
 const PROJECTS = [
   {
+    id: 'letterbook',
+    featured: true,
+    title: 'Letterbook',
+    date: 'August 2026',
+    badge: 'Open Source',
+    repo: 'https://github.com/shantoshdurai/Letterbook',
+    demo: 'https://shantoshdurai.github.io/Letterbook/',
+    demoLabel: 'Open Web App',
+    tags: ['TypeScript', 'PWA', 'Open Library'],
+    desc: 'A free, open-source reading diary inspired by Letterboxd — log books with half-star ratings and reviews, keep lists and a reading goal, import your Goodreads library, and share ratings as Instagram Story cards. Works offline as a PWA, with an Android APK too.',
+  },
+  {
     id: 'touchplay',
     featured: true,
     title: 'TouchPlay',
     date: 'June 2026',
-    badge: 'New',
-    repo: 'https://github.com/shantoshdurai/TouchPlay',
-    demo: 'https://github.com/shantoshdurai/touchplay-releases/releases/latest',
-    tags: ['Flutter', 'Dart', 'Game Controller'],
-    desc: 'Turn your Android phone into a wireless Xbox-style controller for any PC game — low latency, up to 4 phones for local co-op, custom layouts, plus mouse & keyboard, screen mirroring and file transfer. Download the latest APK + PC server from Releases.',
+    badge: 'On Play Store',
+    repo: 'https://github.com/shantoshdurai/touchplay-releases',
+    demo: 'https://play.google.com/store/apps/details?id=com.touchplay.app',
+    demoLabel: 'Google Play',
+    tags: ['Flutter', 'Python', 'WebSockets'],
+    desc: 'Turn your Android phone into a wireless Xbox-style controller for any PC game — low latency, up to 4 phones for local co-op, custom layouts, plus mouse & keyboard, screen mirroring and file transfer. Published on Google Play, with a Python PC server that emulates a virtual Xbox pad.',
   },
   {
     id: 'phone-local-agent',
@@ -441,7 +454,7 @@ function ProjectModal({ project, onClose }) {
           </a>
           {project.demo && (
             <a href={project.demo} target="_blank" rel="noopener noreferrer" className="project-modal-btn">
-              <FaExternalLinkAlt size={12} /> Live Demo
+              <FaExternalLinkAlt size={12} /> {project.demoLabel || 'Live Demo'}
             </a>
           )}
         </div>
@@ -805,6 +818,19 @@ function App() {
 
           <div className="timeline-wrapper">
 
+            <FadeIn className="timeline-content">
+              <div className="timeline-links">
+                <span className="new-badge">Internship</span>
+              </div>
+              <div className="timeline-title-container">
+                <div className="timeline-title">Software Developer Intern · Maac Technologies</div>
+                <div className="timeline-date">August — September 2026</div>
+              </div>
+              <p className="timeline-desc">
+                Built three Flutter apps: Lucky Boss, a cross-border recruitment platform for India, Singapore and Malaysia; TeamTrack, the company's internal project-tracking app; and AS Clinic, a clinic management app with patient queues, prescriptions and billing.
+              </p>
+            </FadeIn>
+
             <FadeIn className="timeline-content" onClick={openCardLink}>
               <div className="timeline-links">
                 <a href="https://www.youtube.com/@santastuffs" target="_blank" rel="noopener noreferrer" className="timeline-link demo-link" onClick={(e) => e.stopPropagation()}>View Channel</a>
@@ -853,7 +879,7 @@ function App() {
                   {p.demo && (
                     <>
                       <span className="timeline-separator">•</span>
-                      <a href={p.demo} target="_blank" rel="noopener noreferrer" className="timeline-link demo-link" onClick={(e) => e.stopPropagation()}>Live Demo</a>
+                      <a href={p.demo} target="_blank" rel="noopener noreferrer" className="timeline-link demo-link" onClick={(e) => e.stopPropagation()}>{p.demoLabel || 'Live Demo'}</a>
                     </>
                   )}
                   {p.badge && <span className="new-badge">{p.badge}</span>}
